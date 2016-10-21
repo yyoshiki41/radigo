@@ -34,13 +34,13 @@ func main() {
 }
 
 func run(args ...string) error {
-	// print the version
+	// Print the version.
 	if args[0] == "version" || args[0] == "-v" {
 		fmt.Fprintln(os.Stderr, radigo.Version())
 		return nil
 	}
 
-	// require a command at the beginning
+	// Require a command at the beginning.
 	if strings.HasPrefix(args[0], "-") {
 		fmt.Fprintln(os.Stderr, usage())
 		return ErrUsage
@@ -52,6 +52,8 @@ func run(args ...string) error {
 		fmt.Fprintln(os.Stderr, usage())
 		return ErrUsage
 	case "rec":
+		return nil
+	case "search":
 		return nil
 	default:
 		return ErrUnknownCommand
