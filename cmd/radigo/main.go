@@ -1,77 +1,25 @@
 package main
 
 import (
-	"errors"
 	"fmt"
+	"log"
 	"os"
-	"strings"
 
+	"github.com/mitchellh/cli"
 	"github.com/yyoshiki41/radigo"
 )
 
-var (
-	// ErrUsage is returned when a usage message was printed and the process
-	// should simply exit with an error.
-	ErrUsage = errors.New("usage")
-
-	// ErrUnknownCommand is returned when a CLI command is not specified.
-	ErrUnknownCommand = errors.New("unknown command")
-)
-
 func main() {
-	if len(os.Args) == 0 {
-		fmt.Fprintln(os.Stderr, usage())
+	c := cli.NewCLI("radigo", radigo.Version())
+	c.Args = os.Args[1:]
+	c.Commands = map[string]cli.CommandFactory{
+		"rec": radigo.RecCommandFactory,
 	}
 
-	err := run(os.Args[1:]...)
-	if err == ErrUsage {
-		os.Exit(2)
-	}
+	exitCode, err := c.Run()
 	if err != nil {
-		fmt.Println(err.Error())
-		os.Exit(1)
-	}
-}
-
-func run(args ...string) error {
-	// Print the version.
-	if args[0] == "version" || args[0] == "-v" {
-		fmt.Fprintln(os.Stderr, radigo.Version())
-		return nil
+		log.Println(fmt.Sprintf("Error executing CLI: %s", err.Error()))
 	}
 
-	// Require a command at the beginning.
-	if strings.HasPrefix(args[0], "-") {
-		fmt.Fprintln(os.Stderr, usage())
-		return ErrUsage
-	}
-
-	// Execute command.
-	switch args[0] {
-	case "help":
-		fmt.Fprintln(os.Stderr, usage())
-		return ErrUsage
-	case "rec":
-		return nil
-	case "search":
-		return nil
-	default:
-		return ErrUnknownCommand
-	}
-}
-
-func usage() string {
-	return strings.TrimLeft(`
-radigo is a tool for recording radiko.
-Usage:
-    radigo command [arguments]
-
-The commands are:
-    help        Print this screen.
-    version     Print the version.
-    rec         Record a radiko program.
-    search      Search a radiko program.
-
-Use "radigo [command] -h" for more information about a command.
-`, "\n")
+	os.Exit(exitCode)
 }
