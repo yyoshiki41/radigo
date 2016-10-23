@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 
@@ -18,7 +17,7 @@ func main() {
 
 	exitCode, err := c.Run()
 	if err != nil {
-		log.Println(fmt.Sprintf("Error executing CLI: %s", err.Error()))
+		log.Printf("Error executing CLI: %s", err.Error())
 	}
 
 	os.Exit(exitCode)

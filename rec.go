@@ -10,7 +10,7 @@ type recCommand struct {
 	ui cli.Ui
 }
 
-func (cmd *recCommand) Run(args []string) int {
+func (c *recCommand) Run(args []string) int {
 	return 0
 }
 
