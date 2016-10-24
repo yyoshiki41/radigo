@@ -3,10 +3,12 @@ package radigo
 import (
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 	"os"
 	"path"
+	"regexp"
 	"strconv"
 )
 
@@ -111,4 +113,40 @@ func (r *radiko) auth1_fms(myPlayerPath string) (string, string, error) {
 	}
 
 	return authToken, partialKey, err
+}
+
+func (r *radiko) auth2_fms(authToken, partialKey string) (string, error) {
+	apiEndpoint, err := r.buildAPIEndpoint("auth2_fms")
+	if err != nil {
+		return "", err
+	}
+	req, err := http.NewRequest("POST", apiEndpoint, nil)
+	if err != nil {
+		return "", err
+	}
+	req.Header.Set("pragma", "no-cache")
+	req.Header.Set("X-Radiko-App", "pc_ts")
+	req.Header.Set("X-Radiko-App-Version", "4.0.0")
+	req.Header.Set("X-Radiko-User", "test-stream")
+	req.Header.Set("X-Radiko-Device", "pc")
+	req.Header.Set("X-Radiko-Authtoken", authToken)
+	req.Header.Set("X-Radiko-Partialkey", partialKey)
+
+	resp, err := r.client.Do(req)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	b, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+
+	matches := regexp.MustCompile("(.*),(.*),(.*)").FindAllStringSubmatch(string(b), -1)
+	if len(matches) == 1 && len(matches[0]) != 4 {
+		return "", err
+	}
+
+	return matches[0][1], nil
 }
