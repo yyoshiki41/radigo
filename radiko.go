@@ -115,15 +115,14 @@ func (r *radiko) auth1_fms(myPlayerPath string) (string, string, error) {
 	return authToken, partialKey, err
 }
 
-// for future needs ...
 func (r *radiko) auth2_fms(authToken, partialKey string) ([]string, error) {
 	apiEndpoint, err := r.buildAPIEndpoint("auth2_fms")
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	req, err := http.NewRequest("POST", apiEndpoint, nil)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	req.Header.Set("pragma", "no-cache")
 	req.Header.Set("X-Radiko-App", "pc_ts")
@@ -132,6 +131,41 @@ func (r *radiko) auth2_fms(authToken, partialKey string) ([]string, error) {
 	req.Header.Set("X-Radiko-Device", "pc")
 	req.Header.Set("X-Radiko-Authtoken", authToken)
 	req.Header.Set("X-Radiko-Partialkey", partialKey)
+
+	resp, err := r.client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	b, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	s := strings.Split(string(b), ",")
+	return s, nil
+}
+
+func (r *radiko) playlistM3U8(authToken, start, end string) (string, error) {
+	apiEndpoint, err := r.buildAPIEndpoint("ts/playlist.m3u8")
+	u, err := url.Parse(apiEndpoint)
+	if err != nil {
+		return "", fmt.Errorf("Parse given URL: %#v", err)
+	}
+	q := u.Query()
+	q.Set("station_id", r.stationID)
+	q.Set("ft", start)
+	q.Set("to", end)
+	q.Set("l", "15") // must?
+	u.RawQuery = q.Encode()
+
+	req, err := http.NewRequest("POST", u.String(), nil)
+	if err != nil {
+		return "", err
+	}
+	req.Header.Set("pragma", "no-cache")
+	req.Header.Set("X-Radiko-Authtoken", authToken)
 
 	resp, err := r.client.Do(req)
 	if err != nil {
@@ -144,6 +178,5 @@ func (r *radiko) auth2_fms(authToken, partialKey string) ([]string, error) {
 		return "", err
 	}
 
-	s := strings.Split(string(b), ",")
-	return s, nil
+	return string(b), nil
 }

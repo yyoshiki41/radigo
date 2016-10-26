@@ -50,6 +50,17 @@ func (c *recCommand) Run(args []string) int {
 		return 1
 	}
 
+	_, err = r.auth2_fms(authToken, partialKey)
+	if err != nil {
+		c.ui.Error(fmt.Sprintf(
+			"Failed to auth2_fms: %s", err))
+		return 1
+	}
+
+	fmt.Println(authToken)
+	res, err := r.playlistM3U8(authToken, start, end)
+	fmt.Println(res)
+
 	return 0
 }
 
