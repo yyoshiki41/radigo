@@ -8,8 +8,8 @@ import (
 	"net/url"
 	"os"
 	"path"
-	"regexp"
 	"strconv"
+	"strings"
 )
 
 const (
@@ -115,7 +115,8 @@ func (r *radiko) auth1_fms(myPlayerPath string) (string, string, error) {
 	return authToken, partialKey, err
 }
 
-func (r *radiko) auth2_fms(authToken, partialKey string) (string, error) {
+// for future needs ...
+func (r *radiko) auth2_fms(authToken, partialKey string) ([]string, error) {
 	apiEndpoint, err := r.buildAPIEndpoint("auth2_fms")
 	if err != nil {
 		return "", err
@@ -143,10 +144,6 @@ func (r *radiko) auth2_fms(authToken, partialKey string) (string, error) {
 		return "", err
 	}
 
-	matches := regexp.MustCompile("(.*),(.*),(.*)").FindAllStringSubmatch(string(b), -1)
-	if len(matches) == 1 && len(matches[0]) != 4 {
-		return "", err
-	}
-
-	return matches[0][1], nil
+	s := strings.Split(string(b), ",")
+	return s, nil
 }
