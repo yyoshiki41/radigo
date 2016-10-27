@@ -1,0 +1,5 @@
+package: github.com/yyoshiki41/radigo
+import:
+- package: github.com/grafov/m3u8
+  version: ^0.7.0
+- package: github.com/mitchellh/cli
