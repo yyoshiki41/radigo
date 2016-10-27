@@ -1,6 +1,7 @@
 package radigo
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -10,6 +11,8 @@ import (
 	"path"
 	"strconv"
 	"strings"
+
+	"github.com/grafov/m3u8"
 )
 
 const (
@@ -173,10 +176,41 @@ func (r *radiko) playlistM3U8(authToken, start, end string) (string, error) {
 	}
 	defer resp.Body.Close()
 
-	b, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
+	playlist, listType, err := m3u8.DecodeFrom(resp.Body, true)
+	if err != nil || listType != m3u8.MASTER {
 		return "", err
 	}
+	p := playlist.(*m3u8.MasterPlaylist)
 
-	return string(b), nil
+	if p == nil || len(p.Variants) != 1 || p.Variants[0] == nil {
+		return "", errors.New("Invalid m3u8")
+	}
+
+	return p.Variants[0].URI, nil
+}
+
+func (r *radiko) getChunklist(uri string) ([]string, error) {
+	req, err := http.NewRequest("GET", uri, nil)
+	if err != nil {
+		return nil, err
+	}
+	resp, err := r.client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	playlist, listType, err := m3u8.DecodeFrom(resp.Body, true)
+	if err != nil || listType != m3u8.MEDIA {
+		return nil, err
+	}
+	p := playlist.(*m3u8.MediaPlaylist)
+
+	var chunklist []string
+	for _, v := range p.Segments {
+		if v != nil {
+			chunklist = append(chunklist, v.URI)
+		}
+	}
+	return chunklist, nil
 }

@@ -57,9 +57,40 @@ func (c *recCommand) Run(args []string) int {
 		return 1
 	}
 
-	fmt.Println(authToken)
-	res, err := r.playlistM3U8(authToken, start, end)
-	fmt.Println(res)
+	uri, err := r.playlistM3U8(authToken, start, end)
+	if err != nil {
+		c.ui.Error(fmt.Sprintf(
+			"Failed to get playlist.m3u8: %s", err))
+		return 1
+	}
+
+	chunklist, err := r.getChunklist(uri)
+	if err != nil {
+		c.ui.Error(fmt.Sprintf(
+			"Failed to get chunklist: %s", err))
+		return 1
+	}
+
+	err = bulkDownload(chunklist)
+	if err != nil {
+		c.ui.Error(fmt.Sprintf(
+			"Failed to download aac files: %s", err))
+		return 1
+	}
+
+	err = createConcatedAACFile()
+	if err != nil {
+		c.ui.Error(fmt.Sprintf(
+			"Failed to create concat aac file: %s", err))
+		return 1
+	}
+
+	err = convertAACToMP3()
+	if err != nil {
+		c.ui.Error(fmt.Sprintf(
+			"Failed to convert aac to mp3: %s", err))
+		return 1
+	}
 
 	return 0
 }

@@ -8,6 +8,7 @@ const (
 )
 
 var (
+	aacPath   = path.Join(radigoPath, "aac")
 	cachePath = path.Join(radigoPath, ".cache")
 )
 
