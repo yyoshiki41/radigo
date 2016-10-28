@@ -1,14 +1,14 @@
 package radigo
 
 import (
-	"fmt"
 	"io"
 	"net/http"
 	"os"
 	"path"
 	"sync"
-	"time"
 )
+
+const maxAttempts = 5
 
 func bulkDownload(list []string) error {
 	var wg sync.WaitGroup
@@ -18,9 +18,11 @@ func bulkDownload(list []string) error {
 		go func(link string) {
 			defer wg.Done()
 
-			err := download(link)
-			if err != nil {
-				fmt.Println(err)
+			for i = 0; i < maxAttempts; i++ {
+				err := download(link)
+				if err == nil {
+					break
+				}
 			}
 		}(v)
 	}
@@ -30,13 +32,7 @@ func bulkDownload(list []string) error {
 }
 
 func download(link string) error {
-	req, err := http.NewRequest("GET", link, nil)
-	if err != nil {
-		return err
-	}
-
-	client := &http.Client{Timeout: time.Duration(300 * time.Second)}
-	resp, err := client.Do(req)
+	resp, err := http.Get(link)
 	if err != nil {
 		return err
 	}
