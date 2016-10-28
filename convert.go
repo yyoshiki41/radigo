@@ -76,5 +76,3 @@ func convertAACToMP3() error {
 	f.setArgs("-i", path.Join(radigoPath, "result.aac"), "-c:a", "libmp3lame", "-ac", "2", "-q:a", "2", path.Join(radigoPath, "result.mp3"))
 	return f.Run()
 }
-
-//ffmpeg -i result.aac -c:a libmp3lame -ac 2 -q:a 2 result.mp3
