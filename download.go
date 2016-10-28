@@ -1,33 +1,43 @@
 package radigo
 
 import (
+	"errors"
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"path"
 	"sync"
 )
 
-const maxAttempts = 5
-
 func bulkDownload(list []string) error {
-	var wg sync.WaitGroup
+	const maxAttempts = 5
 
+	var errFlag bool
+	var wg sync.WaitGroup
 	for _, v := range list {
 		wg.Add(1)
 		go func(link string) {
 			defer wg.Done()
 
-			for i = 0; i < maxAttempts; i++ {
-				err := download(link)
+			var err error
+			for i := 0; i < maxAttempts; i++ {
+				err = download(link)
 				if err == nil {
 					break
 				}
+			}
+			if err != nil {
+				log.Printf("Failed to download aac file: %s", err)
+				errFlag = true
 			}
 		}(v)
 	}
 	wg.Wait()
 
+	if errFlag {
+		return errors.New("Lack of aac files")
+	}
 	return nil
 }
 
