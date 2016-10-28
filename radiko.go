@@ -16,9 +16,15 @@ import (
 )
 
 const (
-	playerURL  = "http://radiko.jp/apps/js/flash/myplayer-release.swf"
+	playerURL = "http://radiko.jp/apps/js/flash/myplayer-release.swf"
+
 	baseURL    = "https://radiko.jp"
 	apiVersion = "v2"
+
+	radikoApp        = "pc_ts"
+	radikoAppVersion = "4.0.0"
+	radikoUser       = "test-stream"
+	radikoDevice     = "pc"
 )
 
 func downloadPlayer(path string) error {
@@ -81,10 +87,10 @@ func (r *radiko) auth1_fms(myPlayerPath string) (string, string, error) {
 		return "", "", err
 	}
 	req.Header.Set("pragma", "no-cache")
-	req.Header.Set("X-Radiko-App", "pc_ts")
-	req.Header.Set("X-Radiko-App-Version", "4.0.0")
-	req.Header.Set("X-Radiko-User", "test-stream")
-	req.Header.Set("X-Radiko-Device", "pc")
+	req.Header.Set("X-Radiko-App", radikoApp)
+	req.Header.Set("X-Radiko-App-Version", radikoAppVersion)
+	req.Header.Set("X-Radiko-User", radikoUser)
+	req.Header.Set("X-Radiko-Device", radikoDevice)
 
 	resp, err := r.client.Do(req)
 	defer resp.Body.Close()
@@ -123,15 +129,16 @@ func (r *radiko) auth2_fms(authToken, partialKey string) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	req, err := http.NewRequest("POST", apiEndpoint, nil)
 	if err != nil {
 		return nil, err
 	}
 	req.Header.Set("pragma", "no-cache")
-	req.Header.Set("X-Radiko-App", "pc_ts")
-	req.Header.Set("X-Radiko-App-Version", "4.0.0")
-	req.Header.Set("X-Radiko-User", "test-stream")
-	req.Header.Set("X-Radiko-Device", "pc")
+	req.Header.Set("X-Radiko-App", radikoApp)
+	req.Header.Set("X-Radiko-App-Version", radikoAppVersion)
+	req.Header.Set("X-Radiko-User", radikoUser)
+	req.Header.Set("X-Radiko-Device", radikoDevice)
 	req.Header.Set("X-Radiko-Authtoken", authToken)
 	req.Header.Set("X-Radiko-Partialkey", partialKey)
 

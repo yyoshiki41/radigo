@@ -27,6 +27,7 @@ func concatFileNames() (string, error) {
 		res = append(res, '|')
 	}
 
+	// remove the last element "|"
 	return string(res[:len(res)-1]), nil
 }
 
