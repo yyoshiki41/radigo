@@ -6,6 +6,7 @@ all: help
 
 help:
 	@echo "make init          #=> Run init scripts"
+	@echo "make cleanup       #=> Remove cache and downloaded files"
 
 init:
 	mkdir $(RADIGODIR) && mkdir $(RADIGODIR)/.cache
