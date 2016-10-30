@@ -12,11 +12,14 @@ import (
 	"strconv"
 	"strings"
 
+	"golang.org/x/net/html"
+
 	"github.com/grafov/m3u8"
 )
 
 const (
 	playerURL = "http://radiko.jp/apps/js/flash/myplayer-release.swf"
+	areaURL   = "http://radiko.jp/area"
 
 	baseURL    = "https://radiko.jp"
 	apiVersion = "v2"
@@ -44,6 +47,32 @@ func downloadPlayer(path string) error {
 		err = closeErr
 	}
 	return err
+}
+
+func getAreaID() (string, error) {
+	resp, err := http.Get(areaURL)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	doc, err := html.Parse(resp.Body)
+	if err != nil {
+		return "", err
+	}
+
+	var areaID string
+	var f func(*html.Node)
+	f = func(n *html.Node) {
+		if n.Type == html.ElementNode && n.Data == "span" && len(n.Attr) > 0 {
+			areaID = n.Attr[0].Val
+		}
+		for c := n.FirstChild; c != nil; c = c.NextSibling {
+			f(c)
+		}
+	}
+	f(doc)
+	return areaID, nil
 }
 
 type radiko struct {

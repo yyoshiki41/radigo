@@ -101,7 +101,7 @@ func (c *recCommand) Synopsis() string {
 
 func (c *recCommand) Help() string {
 	return strings.TrimSpace(`
-Usage: radiko rec [options]
+Usage: radigo rec [options]
   Record a radiko program.
 Options:
   -id=name                 Station id

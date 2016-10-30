@@ -14,6 +14,12 @@ func init() {
 	}
 }
 
+func AreaCommandFactory() (cli.Command, error) {
+	return &areaCommand{
+		ui: Ui,
+	}, nil
+}
+
 func RecCommandFactory() (cli.Command, error) {
 	return &recCommand{
 		ui: Ui,

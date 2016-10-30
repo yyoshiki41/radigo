@@ -12,7 +12,8 @@ func main() {
 	c := cli.NewCLI("radigo", radigo.Version())
 	c.Args = os.Args[1:]
 	c.Commands = map[string]cli.CommandFactory{
-		"rec": radigo.RecCommandFactory,
+		"area": radigo.AreaCommandFactory,
+		"rec":  radigo.RecCommandFactory,
 	}
 
 	exitCode, err := c.Run()
