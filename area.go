@@ -33,6 +33,19 @@ func (c *areaCommand) Run(args []string) int {
 		}
 	}
 
+	// TODO: radiko 構造体
+	r := newRadiko("")
+	pr, err := r.getProgram(areaID)
+	if err != nil {
+		c.ui.Error(fmt.Sprintf(
+			"Failed to get programs: %s", err))
+		return 1
+	}
+	for _, s := range pr.Stations.Stations {
+		c.ui.Output(fmt.Sprintf(
+			"%s\n  - %s", s.Name, s.ID))
+	}
+
 	return 0
 }
 

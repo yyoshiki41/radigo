@@ -1,6 +1,7 @@
 package radigo
 
 import (
+	"encoding/xml"
 	"errors"
 	"fmt"
 	"io"
@@ -15,6 +16,7 @@ import (
 	"golang.org/x/net/html"
 
 	"github.com/grafov/m3u8"
+	"github.com/yyoshiki41/radigo/internal/entity"
 )
 
 const (
@@ -188,10 +190,12 @@ func (r *radiko) auth2_fms(authToken, partialKey string) ([]string, error) {
 
 func (r *radiko) playlistM3U8(authToken, start, end string) (string, error) {
 	apiEndpoint, err := r.buildAPIEndpoint("ts/playlist.m3u8")
+	// TODO: url の組み立て方
 	u, err := url.Parse(apiEndpoint)
 	if err != nil {
 		return "", fmt.Errorf("Parse given URL: %#v", err)
 	}
+	// TODO: Queryの組み立て方
 	q := u.Query()
 	q.Set("station_id", r.stationID)
 	q.Set("ft", start)
@@ -242,6 +246,7 @@ func (r *radiko) getChunklist(uri string) ([]string, error) {
 	}
 	p := playlist.(*m3u8.MediaPlaylist)
 
+	// TODO: 独自struct定義する
 	var chunklist []string
 	for _, v := range p.Segments {
 		if v != nil {
@@ -249,4 +254,31 @@ func (r *radiko) getChunklist(uri string) ([]string, error) {
 		}
 	}
 	return chunklist, nil
+}
+
+func (r *radiko) getProgram(areaID string) (*entity.Programs, error) {
+	apiEndpoint, err := r.buildAPIEndpoint("program/now")
+	u, err := url.Parse(apiEndpoint)
+	if err != nil {
+		return nil, fmt.Errorf("Parse given URL: %#v", err)
+	}
+	q := u.Query()
+	q.Set("area_id", areaID)
+	u.RawQuery = q.Encode()
+
+	resp, err := http.Get(u.String())
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	b, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	var programs entity.Programs
+	if err = xml.Unmarshal(b, &programs); err != nil {
+		return nil, err
+	}
+	return &programs, err
 }
