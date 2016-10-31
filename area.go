@@ -18,8 +18,7 @@ func (c *areaCommand) Run(args []string) int {
 	f := flag.NewFlagSet("area", flag.ContinueOnError)
 	f.StringVar(&areaID, "id", "", "id")
 	f.Usage = func() { c.ui.Error(c.Help()) }
-	err := f.Parse(args)
-	if err != nil {
+	if err := f.Parse(args); err != nil {
 		return 1
 	}
 
