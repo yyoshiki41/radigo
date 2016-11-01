@@ -23,4 +23,8 @@ _testmain.go
 *.test
 *.prof
 
+# vendor
 vendor/*
+# coverage
+coverage.txt
+profile.out
