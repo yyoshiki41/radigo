@@ -6,7 +6,7 @@ go:
   - 1.7.3
   - master
 
-sudo: true
+sudo: required
 
 cache:
   directories:
@@ -22,3 +22,6 @@ install:
 
 script:
   - go test ./...
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
