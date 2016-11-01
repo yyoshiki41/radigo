@@ -13,3 +13,6 @@ init:
 
 cleanup:
 	rm -rf $(RADIGODIR)/* && rm -rf $(RADIGODIR)/.cache/*
+
+test:
+	go test $(go list ./... | grep -v /vendor/)
