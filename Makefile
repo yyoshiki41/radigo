@@ -1,4 +1,5 @@
 RADIGODIR=/tmp/radigo
+RADIGOPKG=$(shell go list ./... | grep -v "/vendor/")
 
 .PHONY: all help init
 
@@ -15,4 +16,4 @@ cleanup:
 	rm -rf $(RADIGODIR)/* && rm -rf $(RADIGODIR)/.cache/*
 
 test:
-	go test $(go list ./... | grep -v /vendor/)
+	go test $(RADIGOPKG)
