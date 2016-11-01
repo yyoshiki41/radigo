@@ -64,16 +64,16 @@ func getAreaID() (string, error) {
 	}
 
 	var areaID string
-	var f func(*html.Node)
-	f = func(n *html.Node) {
+	var funcAreaID func(*html.Node)
+	funcAreaID = func(n *html.Node) {
 		if n.Type == html.ElementNode && n.Data == "span" && len(n.Attr) > 0 {
 			areaID = n.Attr[0].Val
 		}
 		for c := n.FirstChild; c != nil; c = c.NextSibling {
-			f(c)
+			funcAreaID(c)
 		}
 	}
-	f(doc)
+	funcAreaID(doc)
 	return areaID, nil
 }
 
