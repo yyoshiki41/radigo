@@ -13,7 +13,7 @@ cache:
     - ./vendor
 
 before_install:
-  - sudo add-apt-repository ppa:masterminds/glide
+  - yes | sudo add-apt-repository ppa:masterminds/glide
   - sudo apt-get update
   - sudo apt-get install glide
 
