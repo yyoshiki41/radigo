@@ -6,7 +6,7 @@ go:
   - 1.7.3
   - master
 
-sudo: false
+sudo: true
 
 cache:
   directories:
