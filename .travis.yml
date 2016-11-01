@@ -5,6 +5,9 @@ go:
   - 1.7.3
   - master
 
+env:
+  - TEST_DIR=/tmp/radigo
+
 sudo: required
 
 cache:
@@ -16,8 +19,11 @@ before_install:
   - sudo apt-get update
   - sudo apt-get install glide
 
-script:
+before_script:
   - glide i
+  - make init
+
+script:
   - make test-cover
 
 after_success:
