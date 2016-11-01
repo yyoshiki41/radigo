@@ -17,10 +17,8 @@ before_install:
   - sudo apt-get update
   - sudo apt-get install glide
 
-install:
-  - glide i
-
 script:
+  - glide i
   - go test ./...
 
 after_success:
