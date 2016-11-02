@@ -10,7 +10,7 @@ help:
 	@echo "make cleanup       #=> Remove cache and downloaded files"
 
 init:
-	mkdir $(RADIGODIR) && mkdir $(RADIGODIR)/.cache
+	mkdir -p $(RADIGODIR) && mkdir -p $(RADIGODIR)/.cache && mkdir -p $(RADIGODIR)/aac
 
 cleanup:
 	rm -rf $(RADIGODIR)/* && rm -rf $(RADIGODIR)/.cache/*
