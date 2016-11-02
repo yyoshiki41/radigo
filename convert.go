@@ -64,6 +64,7 @@ func createConcatedAACFile() error {
 	}
 	f.setDir(aacPath)
 	f.setArgs("-i", "concat:"+name, "-c", "copy", path.Join(radigoPath, "result.aac"))
+	// TODO: Run 結果の標準出力を拾う
 	return f.Run()
 }
 
@@ -74,5 +75,6 @@ func convertAACToMP3() error {
 	}
 	f.setDir(radigoPath)
 	f.setArgs("-i", path.Join(radigoPath, "result.aac"), "-c:a", "libmp3lame", "-ac", "2", "-q:a", "2", path.Join(radigoPath, "result.mp3"))
+	// TODO: Run 結果の標準出力を拾う
 	return f.Run()
 }

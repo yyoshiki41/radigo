@@ -1,12 +1,12 @@
-hash: eeab20ef14c5ef075e98d7c09dd21ffe04a2ff16ed82170457c9c2a2a8ea5c82
-updated: 2016-11-01T23:39:12.130055336+09:00
+hash: 6eaf7504e34900579c022acefcddb082cf4c15cce90c1ff0ee52d4a389bd0694
+updated: 2016-11-03T02:17:54.107687109+09:00
 imports:
 - name: github.com/armon/go-radix
   version: 4239b77079c7b5d1243b7b4736304ce8ddb6f0f2
 - name: github.com/bgentry/speakeasy
   version: 675b82c74c0ed12283ee81ba8a534c8982c07b85
 - name: github.com/grafov/m3u8
-  version: 85b941382b05233550f4f5b01b47541916c2485a
+  version: 86c6f29e928613af618cc7e1a47b5172cf0532a1
 - name: github.com/mattn/go-isatty
   version: 66b8e73f3f5cda9f96b69efd03dd3d7fc4a5cdb8
 - name: github.com/mitchellh/cli
