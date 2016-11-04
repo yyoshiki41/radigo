@@ -126,9 +126,9 @@ func (r *radiko) auth1_fms(myPlayerPath string) (string, string, error) {
 	resp, err := r.client.Do(req)
 	defer resp.Body.Close()
 
-	authToken := resp.Header.Get("X-Radiko-Authtoken")
-	keyLength := resp.Header.Get("X-Radiko-Keylength")
-	keyOffset := resp.Header.Get("X-Radiko-Keyoffset")
+	authToken := resp.Header.Get("X-Radiko-AuthToken")
+	keyLength := resp.Header.Get("X-Radiko-KeyLength")
+	keyOffset := resp.Header.Get("X-Radiko-KeyOffset")
 
 	length, err := strconv.ParseInt(keyLength, 10, 64)
 	if err != nil {
@@ -170,7 +170,7 @@ func (r *radiko) auth2_fms(authToken, partialKey string) ([]string, error) {
 	req.Header.Set("X-Radiko-App-Version", radikoAppVersion)
 	req.Header.Set("X-Radiko-User", radikoUser)
 	req.Header.Set("X-Radiko-Device", radikoDevice)
-	req.Header.Set("X-Radiko-Authtoken", authToken)
+	req.Header.Set("X-Radiko-AuthToken", authToken)
 	req.Header.Set("X-Radiko-Partialkey", partialKey)
 
 	resp, err := r.client.Do(req)
@@ -208,7 +208,7 @@ func (r *radiko) playlistM3U8(authToken, start, end string) (string, error) {
 		return "", err
 	}
 	req.Header.Set("pragma", "no-cache")
-	req.Header.Set("X-Radiko-Authtoken", authToken)
+	req.Header.Set("X-Radiko-AuthToken", authToken)
 
 	resp, err := r.client.Do(req)
 	if err != nil {
