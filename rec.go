@@ -1,13 +1,16 @@
 package radigo
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"os"
 	"path"
 	"strings"
+	"time"
 
 	"github.com/mitchellh/cli"
+	"github.com/yyoshiki41/go-radiko"
 )
 
 type recCommand struct {
@@ -15,16 +18,21 @@ type recCommand struct {
 }
 
 func (c *recCommand) Run(args []string) int {
-	var stationID, start, end string
+	var stationID, start string
 
 	f := flag.NewFlagSet("rec", flag.ContinueOnError)
 	f.StringVar(&stationID, "id", "", "id")
 	f.StringVar(&start, "start", "", "start")
 	f.StringVar(&start, "s", "", "start")
-	f.StringVar(&end, "end", "", "end")
-	f.StringVar(&end, "e", "", "end")
 	f.Usage = func() { c.ui.Error(c.Help()) }
 	if err := f.Parse(args); err != nil {
+		return 1
+	}
+
+	startTime, err := time.ParseInLocation(datetimeLayout, start, location)
+	if err != nil {
+		c.ui.Error(fmt.Sprintf(
+			"invalid start time format: %s", start))
 		return 1
 	}
 
@@ -35,36 +43,41 @@ func (c *recCommand) Run(args []string) int {
 			os.Remove(myPlayerPath)
 		}
 		*/
-		if err := downloadPlayer(myPlayerPath); err != nil {
+		if err := radiko.DownloadPlayer(myPlayerPath); err != nil {
 			c.ui.Error(fmt.Sprintf(
 				"Failed to download player.swf: %s", err))
 			return 1
 		}
 	}
 
-	r := newRadiko(stationID)
-	authToken, partialKey, err := r.auth1_fms(myPlayerPath)
+	client, err := radiko.New("")
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
-			"Failed to get auth token and key: %s", err))
+			"Failed to construct a radiko Client.: %s", err))
 		return 1
 	}
 
-	_, err = r.auth2_fms(authToken, partialKey)
-	if err != nil {
+	pngPath := path.Join(cachePath, "authkey.png")
+	if err := swfExtract(myPlayerPath, pngPath); err != nil {
 		c.ui.Error(fmt.Sprintf(
-			"Failed to auth2_fms: %s", err))
+			"Failed to execute swfextract: %s", err))
 		return 1
 	}
 
-	uri, err := r.playlistM3U8(authToken, start, end)
+	if _, err = client.AuthorizeToken(context.Background(), pngPath); err != nil {
+		c.ui.Error(fmt.Sprintf(
+			"Failed to get auth_token: %s", err))
+		return 1
+	}
+
+	uri, err := client.TimeshiftPlaylistM3U8(context.Background(), stationID, startTime)
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to get playlist.m3u8: %s", err))
 		return 1
 	}
 
-	chunklist, err := r.getChunklist(uri)
+	chunklist, err := radiko.GetChunklistFromM3U8(uri)
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to get chunklist: %s", err))
@@ -106,6 +119,5 @@ Usage: radigo rec [options]
 Options:
   -id=name                 Station id
   -start,s=201610101000    Start time
-  -end,e=201610101200      End time
 `)
 }

@@ -1,11 +1,13 @@
 package radigo
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"strings"
 
 	"github.com/mitchellh/cli"
+	"github.com/yyoshiki41/go-radiko"
 )
 
 type areaCommand struct {
@@ -24,7 +26,7 @@ func (c *areaCommand) Run(args []string) int {
 
 	if areaID == "" {
 		var err error
-		areaID, err = getAreaID()
+		areaID, err = radiko.AreaID()
 		if err != nil {
 			c.ui.Error(fmt.Sprintf(
 				"Failed to get area id: %s", err))
@@ -32,15 +34,21 @@ func (c *areaCommand) Run(args []string) int {
 		}
 	}
 
-	// TODO: radiko 構造体
-	r := newRadiko("")
-	pr, err := r.getProgram(areaID)
+	client, err := radiko.New("")
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
-			"Failed to get programs: %s", err))
+			"Failed to construct a radiko Client.: %s", err))
 		return 1
 	}
-	for _, s := range pr.Stations.Stations {
+
+	ctx := context.Background()
+	stations, err := client.GetNowProgramsByAreaID(ctx, areaID)
+	if err != nil {
+		c.ui.Error(fmt.Sprintf(
+			"Failed to get stations: %s", err))
+		return 1
+	}
+	for _, s := range stations {
 		c.ui.Output(fmt.Sprintf(
 			"%s\n  - %s", s.Name, s.ID))
 	}
