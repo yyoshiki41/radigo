@@ -64,7 +64,8 @@ func (c *recCommand) Run(args []string) int {
 		return 1
 	}
 
-	if _, err = client.AuthorizeToken(context.Background(), pngPath); err != nil {
+	_, err = client.AuthorizeToken(context.Background(), pngPath)
+	if err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to get auth_token: %s", err))
 		return 1

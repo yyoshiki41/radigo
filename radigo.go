@@ -9,8 +9,8 @@ const (
 	version    = "0.0.1"
 	radigoPath = "/tmp/radigo"
 
-	datetimeLayout = "20060102150405"
 	tz             = "Asia/Tokyo"
+	datetimeLayout = "20060102150405"
 )
 
 var (
