@@ -19,13 +19,21 @@ type recCommand struct {
 
 func (c *recCommand) Run(args []string) int {
 	var stationID, start string
+	var flagForce bool
 
 	f := flag.NewFlagSet("rec", flag.ContinueOnError)
 	f.StringVar(&stationID, "id", "", "id")
 	f.StringVar(&start, "start", "", "start")
 	f.StringVar(&start, "s", "", "start")
+	f.BoolVar(&flagForce, "force", false, "force")
+	f.BoolVar(&flagForce, "f", false, "force")
 	f.Usage = func() { c.ui.Error(c.Help()) }
 	if err := f.Parse(args); err != nil {
+		return 1
+	}
+
+	if stationID == "" {
+		c.ui.Error("StationID is empty.")
 		return 1
 	}
 
@@ -37,17 +45,22 @@ func (c *recCommand) Run(args []string) int {
 	}
 
 	myPlayerPath := path.Join(radigoPath, "myplayer.swf")
-	if _, err := os.Stat(myPlayerPath); err != nil {
-		/* TODO: force option
+	_, err = os.Stat(myPlayerPath)
+
+	var dlErr error
+	switch {
+	case flagForce:
 		if os.IsExist(err) {
 			os.Remove(myPlayerPath)
 		}
-		*/
-		if err := radiko.DownloadPlayer(myPlayerPath); err != nil {
-			c.ui.Error(fmt.Sprintf(
-				"Failed to download player.swf: %s", err))
-			return 1
-		}
+		dlErr = radiko.DownloadPlayer(myPlayerPath)
+	case os.IsNotExist(err):
+		dlErr = radiko.DownloadPlayer(myPlayerPath)
+	}
+	if dlErr != nil {
+		c.ui.Error(fmt.Sprintf(
+			"Failed to download player.swf: %s", dlErr))
+		return 1
 	}
 
 	pngPath := path.Join(cachePath, "authkey.png")
@@ -120,5 +133,6 @@ Usage: radigo rec [options]
 Options:
   -id=name                 Station id
   -start,s=201610101000    Start time
+  -force,-f                Force flag (Do not use cache)
 `)
 }
