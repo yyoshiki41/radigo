@@ -50,17 +50,17 @@ func (c *recCommand) Run(args []string) int {
 		}
 	}
 
-	client, err := radiko.New("")
-	if err != nil {
-		c.ui.Error(fmt.Sprintf(
-			"Failed to construct a radiko Client.: %s", err))
-		return 1
-	}
-
 	pngPath := path.Join(cachePath, "authkey.png")
 	if err := swfExtract(myPlayerPath, pngPath); err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to execute swfextract: %s", err))
+		return 1
+	}
+
+	client, err := radiko.New("")
+	if err != nil {
+		c.ui.Error(fmt.Sprintf(
+			"Failed to construct a radiko Client.: %s", err))
 		return 1
 	}
 
