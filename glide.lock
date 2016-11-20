@@ -1,5 +1,5 @@
-hash: 3baaa22e7aeb06ffa991179d4fee0f0fecf2720a802fa570cc359148d5237c4c
-updated: 2016-11-12T15:39:40.664397789+09:00
+hash: 5039e74a1e6200f03bf22241ef68b48827ef9f3374c36234fea6f76534c0a194
+updated: 2016-11-20T16:35:00.764676504+09:00
 imports:
 - name: github.com/armon/go-radix
   version: 4239b77079c7b5d1243b7b4736304ce8ddb6f0f2
@@ -10,9 +10,9 @@ imports:
 - name: github.com/mattn/go-isatty
   version: 66b8e73f3f5cda9f96b69efd03dd3d7fc4a5cdb8
 - name: github.com/mitchellh/cli
-  version: 074e243518e473e0887217008dd013e07755be8c
+  version: fa17b36f6c61f1ddbbb08c9f6fde94b3c065a09d
 - name: github.com/yyoshiki41/go-radiko
-  version: d30c692967c692e510dfadfefec0730d28f1bc7c
+  version: b5c1326cde19b9f89656254899ca3d94fd3be500
   subpackages:
   - internal
 - name: golang.org/x/net

@@ -2,3 +2,5 @@ package: github.com/yyoshiki41/radigo
 import:
 - package: github.com/mitchellh/cli
   version: master
+- package: github.com/yyoshiki41/go-radiko
+  version: ^0.2.0
