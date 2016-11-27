@@ -1,6 +1,6 @@
 # radigo
 
-Record a radiko program.
+Record the [radiko.jp](http://radiko.jp/) programs.
 
 [![godoc](https://godoc.org/github.com/yyoshiki41/radigo?status.svg)](https://godoc.org/github.com/yyoshiki41/radigo)
 [![build](https://travis-ci.org/yyoshiki41/radigo.svg?branch=master)](https://travis-ci.org/yyoshiki41/radigo)
