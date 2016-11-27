@@ -24,16 +24,6 @@ func (c *areaCommand) Run(args []string) int {
 		return 1
 	}
 
-	if areaID == "" {
-		var err error
-		areaID, err = radiko.AreaID()
-		if err != nil {
-			c.ui.Error(fmt.Sprintf(
-				"Failed to get area id: %s", err))
-			return 1
-		}
-	}
-
 	client, err := radiko.New("")
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
@@ -41,8 +31,11 @@ func (c *areaCommand) Run(args []string) int {
 		return 1
 	}
 
-	ctx := context.Background()
-	stations, err := client.GetNowProgramsByAreaID(ctx, areaID)
+	if areaID != "" {
+		client.SetAreaID(areaID)
+	}
+
+	stations, err := client.GetNowPrograms(context.Background())
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to get stations: %s", err))

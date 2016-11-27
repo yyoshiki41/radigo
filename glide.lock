@@ -1,5 +1,5 @@
-hash: 5039e74a1e6200f03bf22241ef68b48827ef9f3374c36234fea6f76534c0a194
-updated: 2016-11-20T16:35:00.764676504+09:00
+hash: 26c4400433374034aea44c7fd3f94ca9cbdd8327ceab67712f1fec12665c42b5
+updated: 2016-11-27T15:20:56.657140587+09:00
 imports:
 - name: github.com/armon/go-radix
   version: 4239b77079c7b5d1243b7b4736304ce8ddb6f0f2
@@ -12,7 +12,7 @@ imports:
 - name: github.com/mitchellh/cli
   version: fa17b36f6c61f1ddbbb08c9f6fde94b3c065a09d
 - name: github.com/yyoshiki41/go-radiko
-  version: b5c1326cde19b9f89656254899ca3d94fd3be500
+  version: ddbd70f3eeb298025dcfd4c7e8a899f201873b57
   subpackages:
   - internal
 - name: golang.org/x/net
