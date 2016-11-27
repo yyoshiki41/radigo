@@ -3,6 +3,8 @@ package radigo
 import (
 	"path"
 	"time"
+
+	"github.com/yyoshiki41/go-radiko"
 )
 
 const (
@@ -17,11 +19,17 @@ var (
 	aacPath   = path.Join(radigoPath, "aac")
 	cachePath = path.Join(radigoPath, ".cache")
 
-	location *time.Location
+	currentAreaID string
+	location      *time.Location
 )
 
 func init() {
 	var err error
+
+	currentAreaID, err = radiko.AreaID()
+	if err != nil {
+		panic(err)
+	}
 
 	location, err = time.LoadLocation(tz)
 	if err != nil {

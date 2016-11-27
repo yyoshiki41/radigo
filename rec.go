@@ -18,13 +18,15 @@ type recCommand struct {
 }
 
 func (c *recCommand) Run(args []string) int {
-	var stationID, start string
+	var stationID, start, areaID string
 	var flagForce bool
 
 	f := flag.NewFlagSet("rec", flag.ContinueOnError)
 	f.StringVar(&stationID, "id", "", "id")
 	f.StringVar(&start, "start", "", "start")
 	f.StringVar(&start, "s", "", "start")
+	f.StringVar(&areaID, "area", "", "area")
+	f.StringVar(&areaID, "a", "", "area")
 	f.BoolVar(&flagForce, "force", false, "force")
 	f.BoolVar(&flagForce, "f", false, "force")
 	f.Usage = func() { c.ui.Error(c.Help()) }
@@ -73,8 +75,20 @@ func (c *recCommand) Run(args []string) int {
 	client, err := radiko.New("")
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
-			"Failed to construct a radiko Client.: %s", err))
+			"Failed to construct a radiko Client: %s", err))
 		return 1
+	}
+
+	if areaID != "" && currentAreaID != areaID {
+		// When a currentAreaID is not equal to the given areaID,
+		// it is neccessary to use the area free as the premium member.
+		client, err = newClientPremiumMember("")
+		if err != nil {
+			c.ui.Error(fmt.Sprintf(
+				"Failed to construct a radiko Client as the premium member: %s", err))
+			return 1
+		}
+		client.SetAreaID(areaID)
 	}
 
 	_, err = client.AuthorizeToken(context.Background(), pngPath)
@@ -133,6 +147,7 @@ Usage: radigo rec [options]
 Options:
   -id=name                 Station id
   -start,s=201610101000    Start time
+  -area,a=name             Area id
   -force,-f                Force flag (Do not use cache)
 `)
 }
