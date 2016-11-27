@@ -1,13 +1,14 @@
 RADIGODIR=/tmp/radigo
 RADIGOPKG=$(shell go list ./... | grep -v "/vendor/")
 
-.PHONY: all help init
+.PHONY: all help init test
 
 all: help
 
 help:
 	@echo "make init          #=> Run init scripts"
 	@echo "make cleanup       #=> Remove cache and downloaded files"
+	@echo "make test          #=> Run unit tests"
 
 init:
 	mkdir -p $(RADIGODIR) && mkdir -p $(RADIGODIR)/.cache && mkdir -p $(RADIGODIR)/aac
