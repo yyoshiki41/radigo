@@ -3,4 +3,4 @@ import:
 - package: github.com/mitchellh/cli
   version: master
 - package: github.com/yyoshiki41/go-radiko
-  version: ^0.3.0
+  version: ^0.3.1
