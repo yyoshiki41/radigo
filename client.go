@@ -13,6 +13,29 @@ const (
 	envRadikoPassword = "RADIKO_PASSWORD"
 )
 
+func getClient(authToken, areaID string) (*radiko.Client, error) {
+	var client *radiko.Client
+	var err error
+
+	switch {
+	case areaID != "" && areaID != currentAreaID:
+		// When a currentAreaID is not equal to the given areaID,
+		// it is neccessary to use the area free as the premium member.
+		client, err = newClientPremiumMember(authToken)
+		if err != nil {
+			return client, err
+		}
+		client.SetAreaID(areaID)
+	default:
+		client, err = radiko.New("")
+	}
+
+	if err != nil {
+		return nil, err
+	}
+	return client, nil
+}
+
 func newClientPremiumMember(authToken string) (*radiko.Client, error) {
 	client, err := radiko.New(authToken)
 	if err != nil {
@@ -21,8 +44,8 @@ func newClientPremiumMember(authToken string) (*radiko.Client, error) {
 
 	mail := os.Getenv(envRadikoMail)
 	password := os.Getenv(envRadikoPassword)
-	login, err := client.Login(context.Background(), mail, password)
 
+	login, err := client.Login(context.Background(), mail, password)
 	switch {
 	case err != nil:
 		return nil, err

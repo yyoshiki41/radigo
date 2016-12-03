@@ -4,8 +4,6 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"os"
-	"path"
 	"strings"
 	"time"
 
@@ -46,51 +44,26 @@ func (c *recCommand) Run(args []string) int {
 		return 1
 	}
 
-	myPlayerPath := path.Join(radigoPath, "myplayer.swf")
-	_, err = os.Stat(myPlayerPath)
-
-	var dlErr error
-	switch {
-	case flagForce:
-		if os.IsExist(err) {
-			os.Remove(myPlayerPath)
-		}
-		dlErr = radiko.DownloadPlayer(myPlayerPath)
-	case os.IsNotExist(err):
-		dlErr = radiko.DownloadPlayer(myPlayerPath)
-	}
-	if dlErr != nil {
+	err = downloadSwfPlayer(flagForce)
+	if err != nil {
 		c.ui.Error(fmt.Sprintf(
-			"Failed to download player.swf: %s", dlErr))
+			"Failed to download player.swf: %s", err))
 		return 1
 	}
 
-	pngPath := path.Join(cachePath, "authkey.png")
-	if err := swfExtract(myPlayerPath, pngPath); err != nil {
+	pngPath, err := extractPngFile()
+	if err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to execute swfextract: %s", err))
 		return 1
 	}
 
-	client, err := radiko.New("")
+	client, err := getClient("", areaID)
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to construct a radiko Client: %s", err))
 		return 1
 	}
-
-	if areaID != "" && currentAreaID != areaID {
-		// When a currentAreaID is not equal to the given areaID,
-		// it is neccessary to use the area free as the premium member.
-		client, err = newClientPremiumMember("")
-		if err != nil {
-			c.ui.Error(fmt.Sprintf(
-				"Failed to construct a radiko Client as the premium member: %s", err))
-			return 1
-		}
-		client.SetAreaID(areaID)
-	}
-
 	_, err = client.AuthorizeToken(context.Background(), pngPath)
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
@@ -148,6 +121,6 @@ Options:
   -id=name                 Station id
   -start,s=201610101000    Start time
   -area,a=name             Area id
-  -force,-f                Force flag (Do not use cache)
+  -force,-f                Ignore cache and force refresh
 `)
 }
