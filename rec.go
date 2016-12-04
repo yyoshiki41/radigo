@@ -4,6 +4,8 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"io/ioutil"
+	"os"
 	"strings"
 	"time"
 
@@ -85,14 +87,22 @@ func (c *recCommand) Run(args []string) int {
 		return 1
 	}
 
-	err = bulkDownload(chunklist)
+	aacDir, err := ioutil.TempDir(radigoPath, "aac")
+	if err != nil {
+		c.ui.Error(fmt.Sprintf(
+			"Failed to create temp dir: %s", err))
+		return 1
+	}
+	defer os.RemoveAll(aacDir)
+
+	err = bulkDownload(aacDir, chunklist)
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to download aac files: %s", err))
 		return 1
 	}
 
-	err = createConcatedAACFile()
+	err = createConcatedAACFile(aacDir)
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to create concat aac file: %s", err))

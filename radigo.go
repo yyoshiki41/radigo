@@ -1,6 +1,7 @@
 package radigo
 
 import (
+	"os"
 	"path"
 	"time"
 
@@ -8,16 +9,15 @@ import (
 )
 
 const (
-	version    = "0.1.0"
-	radigoPath = "/tmp/radigo"
+	version = "0.1.0"
 
 	tz             = "Asia/Tokyo"
 	datetimeLayout = "20060102150405"
 )
 
 var (
-	aacPath   = path.Join(radigoPath, "aac")
-	cachePath = path.Join(radigoPath, ".cache")
+	radigoPath = "/tmp/radigo"
+	cachePath  = path.Join(radigoPath, ".cache")
 
 	currentAreaID string
 	location      *time.Location
@@ -25,6 +25,12 @@ var (
 
 func init() {
 	var err error
+
+	// If the environment variable RADIGO_HOME is set,
+	// override working directory path.
+	if e := os.Getenv("RADIGO_HOME"); e != "" {
+		radigoPath = e
+	}
 
 	currentAreaID, err = radiko.AreaID()
 	if err != nil {

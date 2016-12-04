@@ -10,7 +10,7 @@ import (
 	"sync"
 )
 
-func bulkDownload(list []string) error {
+func bulkDownload(aacDir string, list []string) error {
 	const maxAttempts = 5
 
 	var errFlag bool
@@ -22,7 +22,7 @@ func bulkDownload(list []string) error {
 
 			var err error
 			for i := 0; i < maxAttempts; i++ {
-				err = download(link)
+				err = download(aacDir, link)
 				if err == nil {
 					break
 				}
@@ -41,7 +41,7 @@ func bulkDownload(list []string) error {
 	return nil
 }
 
-func download(link string) error {
+func download(aacDir, link string) error {
 	resp, err := http.Get(link)
 	if err != nil {
 		return err
@@ -49,7 +49,7 @@ func download(link string) error {
 	defer resp.Body.Close()
 
 	_, fileName := path.Split(link)
-	file, err := os.Create(path.Join(aacPath, fileName))
+	file, err := os.Create(path.Join(aacDir, fileName))
 	if err != nil {
 		return err
 	}

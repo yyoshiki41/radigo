@@ -14,8 +14,8 @@ func (f sliceFileInfo) Len() int           { return len(f) }
 func (f sliceFileInfo) Swap(i, j int)      { f[i], f[j] = f[j], f[i] }
 func (f sliceFileInfo) Less(i, j int) bool { return f[i].Name() < f[j].Name() }
 
-func concatFileNames() (string, error) {
-	files, err := ioutil.ReadDir(aacPath)
+func concatFileNames(aacDir string) (string, error) {
+	files, err := ioutil.ReadDir(aacDir)
 	if err != nil {
 		return "", nil
 	}
@@ -31,8 +31,8 @@ func concatFileNames() (string, error) {
 	return string(res[:len(res)-1]), nil
 }
 
-func createConcatedAACFile() error {
-	name, err := concatFileNames()
+func createConcatedAACFile(aacDir string) error {
+	name, err := concatFileNames(aacDir)
 	if err != nil {
 		return err
 	}
@@ -42,7 +42,7 @@ func createConcatedAACFile() error {
 		return err
 	}
 
-	f.setDir(aacPath)
+	f.setDir(aacDir)
 	f.setArgs("-c", "copy")
 	// TODO: Run 結果の標準出力を拾う
 	return f.run(path.Join(radigoPath, "result.aac"))
