@@ -25,3 +25,9 @@ func RecCommandFactory() (cli.Command, error) {
 		ui: Ui,
 	}, nil
 }
+
+func RecLiveCommandFactory() (cli.Command, error) {
+	return &recLiveCommand{
+		ui: Ui,
+	}, nil
+}

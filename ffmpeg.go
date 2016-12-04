@@ -30,3 +30,8 @@ func (f *ffmpeg) run(output string) error {
 	f.Args = append(f.Args, output)
 	return f.Run()
 }
+
+func (f *ffmpeg) start(output string) error {
+	f.Args = append(f.Args, output)
+	return f.Start()
+}
