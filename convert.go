@@ -1,9 +1,9 @@
 package radigo
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
-	"os/exec"
 	"path"
 	"sort"
 )
@@ -31,50 +31,35 @@ func concatFileNames() (string, error) {
 	return string(res[:len(res)-1]), nil
 }
 
-type ffmpeg struct {
-	*exec.Cmd
-}
-
-func newFfmpeg() (*ffmpeg, error) {
-	cmdPath, err := exec.LookPath("ffmpeg")
-	if err != nil {
-		return nil, err
-	}
-
-	return &ffmpeg{&exec.Cmd{Path: cmdPath}}, nil
-}
-
-func (f *ffmpeg) setDir(dir string) {
-	f.Dir = dir
-}
-
-func (f *ffmpeg) setArgs(args ...string) {
-	f.Args = append([]string{f.Path}, args...)
-}
-
 func createConcatedAACFile() error {
 	name, err := concatFileNames()
 	if err != nil {
 		return err
 	}
 
-	f, err := newFfmpeg()
+	f, err := newFfmpeg(fmt.Sprintf("concat:%s", name))
 	if err != nil {
 		return err
 	}
+
 	f.setDir(aacPath)
-	f.setArgs("-i", "concat:"+name, "-c", "copy", path.Join(radigoPath, "result.aac"))
+	f.setArgs("-c", "copy")
 	// TODO: Run 結果の標準出力を拾う
-	return f.Run()
+	return f.run(path.Join(radigoPath, "result.aac"))
 }
 
 func convertAACToMP3() error {
-	f, err := newFfmpeg()
+	f, err := newFfmpeg(path.Join(radigoPath, "result.aac"))
 	if err != nil {
 		return err
 	}
+
 	f.setDir(radigoPath)
-	f.setArgs("-i", path.Join(radigoPath, "result.aac"), "-c:a", "libmp3lame", "-ac", "2", "-q:a", "2", path.Join(radigoPath, "result.mp3"))
+	f.setArgs(
+		"-c:a", "libmp3lame",
+		"-ac", "2",
+		"-q:a", "2",
+	)
 	// TODO: Run 結果の標準出力を拾う
-	return f.Run()
+	return f.run(path.Join(radigoPath, "result.mp3"))
 }
