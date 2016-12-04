@@ -4,36 +4,27 @@ import (
 	"os"
 	"os/exec"
 	"path"
-
-	"github.com/yyoshiki41/go-radiko"
 )
 
 var (
 	swfPlayer = path.Join(radigoPath, "myplayer.swf")
+	pngFile   = path.Join(cachePath, "authkey.png")
 )
 
-func downloadSwfPlayer(flagForce bool) error {
-	_, err := os.Stat(swfPlayer)
+func extractPngFile(flagForce bool) error {
+	_, err := os.Stat(pngFile)
 	if flagForce && os.IsExist(err) {
-		os.Remove(swfPlayer)
+		os.Remove(pngFile)
 	}
 
 	if flagForce || os.IsNotExist(err) {
-		err := radiko.DownloadPlayer(swfPlayer)
+		err := swfExtract(swfPlayer, pngFile)
 		if err != nil {
 			return err
 		}
 	}
+
 	return nil
-}
-
-func extractPngFile() (string, error) {
-	pngPath := path.Join(cachePath, "authkey.png")
-	if err := swfExtract(swfPlayer, pngPath); err != nil {
-		return "", err
-	}
-
-	return pngPath, nil
 }
 
 func swfExtract(swfPath, output string) error {

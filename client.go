@@ -56,3 +56,18 @@ func newClientPremiumMember(authToken string) (*radiko.Client, error) {
 
 	return client, nil
 }
+
+func downloadSwfPlayer(flagForce bool) error {
+	_, err := os.Stat(swfPlayer)
+	if flagForce && os.IsExist(err) {
+		os.Remove(swfPlayer)
+	}
+
+	if flagForce || os.IsNotExist(err) {
+		err := radiko.DownloadPlayer(swfPlayer)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}

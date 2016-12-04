@@ -18,6 +18,7 @@ $ go get github.com/yyoshiki41/radigo/cmd/radigo/...
 
 - swfextract
 - ffmpeg
+- rtmpdump (only if [recording a live streaming radio](#-rec-live))
 
 ## Configuration
 
@@ -26,6 +27,10 @@ $ make init
 ```
 
 #### - Optional (radiko premium)
+
+If you want to change output dir, set the environment variables.
+
+- `RADIKO_HOME` (default: `/tmp/radigo`)
 
 If use the [area free](http://radiko.jp/rg/premium/), set the environment variables.
 
@@ -80,10 +85,12 @@ $ radigo rec-live -id=LFR -t=3600
 /tmp/radigo/result.mp3
 ```
 
-#### - cleanup
+### Cleanup
+
+Remove cache and force refresh.
 
 ```bash
-$ make cleanup
+$ make clean
 ```
 
 ## License 

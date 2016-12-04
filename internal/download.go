@@ -1,4 +1,4 @@
-package radigo
+package internal
 
 import (
 	"errors"
@@ -10,7 +10,7 @@ import (
 	"sync"
 )
 
-func bulkDownload(aacDir string, list []string) error {
+func BulkDownload(list []string, output string) error {
 	const maxAttempts = 5
 
 	var errFlag bool
@@ -22,13 +22,13 @@ func bulkDownload(aacDir string, list []string) error {
 
 			var err error
 			for i := 0; i < maxAttempts; i++ {
-				err = download(aacDir, link)
+				err = download(link, output)
 				if err == nil {
 					break
 				}
 			}
 			if err != nil {
-				log.Printf("Failed to download aac file: %s", err)
+				log.Printf("Failed to download: %s", err)
 				errFlag = true
 			}
 		}(v)
@@ -41,7 +41,7 @@ func bulkDownload(aacDir string, list []string) error {
 	return nil
 }
 
-func download(aacDir, link string) error {
+func download(link, output string) error {
 	resp, err := http.Get(link)
 	if err != nil {
 		return err
@@ -49,7 +49,7 @@ func download(aacDir, link string) error {
 	defer resp.Body.Close()
 
 	_, fileName := path.Split(link)
-	file, err := os.Create(path.Join(aacDir, fileName))
+	file, err := os.Create(path.Join(output, fileName))
 	if err != nil {
 		return err
 	}

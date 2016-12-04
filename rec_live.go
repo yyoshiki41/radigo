@@ -7,9 +7,10 @@ import (
 	"os"
 	"path"
 	"strings"
+	"time"
 
 	"github.com/mitchellh/cli"
-	radiko "github.com/yyoshiki41/go-radiko"
+	"github.com/yyoshiki41/go-radiko"
 )
 
 type recLiveCommand struct {
@@ -49,7 +50,7 @@ func (c *recLiveCommand) Run(args []string) int {
 		return 1
 	}
 
-	pngPath, err := extractPngFile()
+	err = extractPngFile(flagForce)
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to execute swfextract: %s", err))
@@ -62,7 +63,7 @@ func (c *recLiveCommand) Run(args []string) int {
 			"Failed to construct a radiko Client: %s", err))
 		return 1
 	}
-	_, err = client.AuthorizeToken(context.Background(), pngPath)
+	_, err = client.AuthorizeToken(context.Background(), pngFile)
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to get auth_token: %s", err))
@@ -112,8 +113,11 @@ func (c *recLiveCommand) Run(args []string) int {
 	}
 	ffmpegCmd.Stdout = os.Stdout
 
-	output := path.Join(radigoPath, "result.mp3")
-	err = ffmpegCmd.start(output)
+	outputFile := path.Join(radigoPath,
+		fmt.Sprintf("%s-%s.mp3",
+			time.Now().In(location).Format(datetimeLayout), stationID,
+		))
+	err = ffmpegCmd.start(outputFile)
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to start ffmpeg command: %s", err))

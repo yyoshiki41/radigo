@@ -4,13 +4,14 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"os"
+	"path"
 	"strings"
 	"time"
 
 	"github.com/mitchellh/cli"
 	"github.com/yyoshiki41/go-radiko"
+	"github.com/yyoshiki41/radigo/internal"
 )
 
 type recCommand struct {
@@ -53,7 +54,7 @@ func (c *recCommand) Run(args []string) int {
 		return 1
 	}
 
-	pngPath, err := extractPngFile()
+	err = extractPngFile(flagForce)
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to execute swfextract: %s", err))
@@ -66,7 +67,7 @@ func (c *recCommand) Run(args []string) int {
 			"Failed to construct a radiko Client: %s", err))
 		return 1
 	}
-	_, err = client.AuthorizeToken(context.Background(), pngPath)
+	_, err = client.AuthorizeToken(context.Background(), pngFile)
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to get auth_token: %s", err))
@@ -87,32 +88,28 @@ func (c *recCommand) Run(args []string) int {
 		return 1
 	}
 
-	aacDir, err := ioutil.TempDir(radigoPath, "aac")
+	aacDir, err := initTempAACDir()
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
-			"Failed to create temp dir: %s", err))
+			"Failed to create the aac dir: %s", err))
 		return 1
 	}
 	defer os.RemoveAll(aacDir)
 
-	err = bulkDownload(aacDir, chunklist)
-	if err != nil {
+	if err := internal.BulkDownload(chunklist, aacDir); err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to download aac files: %s", err))
 		return 1
 	}
 
-	err = createConcatedAACFile(aacDir)
-	if err != nil {
-		c.ui.Error(fmt.Sprintf(
-			"Failed to create concat aac file: %s", err))
-		return 1
-	}
+	outputFile := path.Join(radigoPath,
+		fmt.Sprintf("%s-%s.mp3",
+			startTime.In(location).Format(datetimeLayout), stationID,
+		))
 
-	err = convertAACToMP3()
-	if err != nil {
+	if err := outputMP3(aacDir, outputFile); err != nil {
 		c.ui.Error(fmt.Sprintf(
-			"Failed to convert aac to mp3: %s", err))
+			"Failed to output mp3 file: %s", err))
 		return 1
 	}
 
