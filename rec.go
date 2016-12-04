@@ -9,7 +9,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/briandowns/spinner"
 	"github.com/mitchellh/cli"
+	"github.com/olekukonko/tablewriter"
 	"github.com/yyoshiki41/go-radiko"
 	"github.com/yyoshiki41/radigo/internal"
 )
@@ -47,6 +49,10 @@ func (c *recCommand) Run(args []string) int {
 		return 1
 	}
 
+	fmt.Print("Now donwloading.. ")
+	spin := spinner.New(spinner.CharSets[9], time.Second)
+	spin.Start()
+
 	err = downloadSwfPlayer(flagForce)
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
@@ -73,6 +79,15 @@ func (c *recCommand) Run(args []string) int {
 			"Failed to get auth_token: %s", err))
 		return 1
 	}
+
+	go func() {
+		pg, _ := client.GetProgramByStartTime(context.Background(), stationID, startTime)
+		table := tablewriter.NewWriter(os.Stdout)
+		table.SetHeader([]string{"STATION ID", "TITLE"})
+		table.Append([]string{stationID, pg.Title})
+		fmt.Println()
+		table.Render()
+	}()
 
 	uri, err := client.TimeshiftPlaylistM3U8(context.Background(), stationID, startTime)
 	if err != nil {
@@ -112,6 +127,10 @@ func (c *recCommand) Run(args []string) int {
 			"Failed to output mp3 file: %s", err))
 		return 1
 	}
+
+	spin.Stop()
+	c.ui.Output(fmt.Sprintf(
+		"Completed!\n%s", outputFile))
 
 	return 0
 }

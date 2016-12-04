@@ -9,7 +9,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/briandowns/spinner"
 	"github.com/mitchellh/cli"
+	"github.com/olekukonko/tablewriter"
 	"github.com/yyoshiki41/go-radiko"
 )
 
@@ -42,6 +44,15 @@ func (c *recLiveCommand) Run(args []string) int {
 		c.ui.Error("Duration is empty.")
 		return 1
 	}
+
+	fmt.Println("Now donwloading.. ")
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetHeader([]string{"Station ID", "Duration(sec)"})
+	table.Append([]string{stationID, duration})
+	table.Render()
+
+	spin := spinner.New(spinner.CharSets[9], time.Second)
+	spin.Start()
 
 	err := downloadSwfPlayer(flagForce)
 	if err != nil {
@@ -117,6 +128,7 @@ func (c *recLiveCommand) Run(args []string) int {
 		fmt.Sprintf("%s-%s.mp3",
 			time.Now().In(location).Format(datetimeLayout), stationID,
 		))
+
 	err = ffmpegCmd.start(outputFile)
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
@@ -134,6 +146,10 @@ func (c *recLiveCommand) Run(args []string) int {
 			"Failed to execute ffmpeg command: %s", err))
 		return 1
 	}
+
+	spin.Stop()
+	c.ui.Output(fmt.Sprintf(
+		"Completed!\n%s", outputFile))
 
 	return 0
 }
