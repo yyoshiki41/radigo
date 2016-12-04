@@ -3,7 +3,7 @@
 Record the [radiko.jp](http://radiko.jp/) programs.
 
 [![godoc](https://godoc.org/github.com/yyoshiki41/radigo?status.svg)](https://godoc.org/github.com/yyoshiki41/radigo)
-[![build](https://travis-ci.org/yyoshiki41/radigo.svg?branch=master)](https://travis-ci.org/yyoshiki41/radigo)
+[![CircleCI](https://circleci.com/gh/yyoshiki41/radigo.svg?style=svg)](https://circleci.com/gh/yyoshiki41/radigo)
 [![go report](https://goreportcard.com/badge/github.com/yyoshiki41/radigo)](https://goreportcard.com/report/github.com/yyoshiki41/radigo)
 
 ## Installation

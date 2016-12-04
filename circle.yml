@@ -1,16 +1,28 @@
 machine:
   timezone:
     Asia/Tokyo
+  environment:
+    GODIST: "go1.7.3.linux-amd64.tar.gz"
+  post:
+    - mkdir -p downloads
+    - test -e downloads/$GODIST || curl -o downloads/$GODIST https://storage.googleapis.com/golang/$GODIST
+    - sudo rm -rf /usr/local/go
+    - sudo tar -C /usr/local -xzf downloads/$GODIST
 
 dependencies:
   cache_directories:
     - $CIRCLE_PROJECT_HOME/vendor
   pre:
-    - curl https://glide.sh/get | sh
+    - sudo add-apt-repository -y ppa:masterminds/glide; sudo apt-get update;
+    - sudo apt-get install glide
+  override:
+    - |
+      if [ ! -d "$CIRCLE_PROJECT_HOME/vendor" ]; then
+        glide i
+      fi
 
 test:
   pre:
-    - glide i
     - make init
   override:
     - make test-cover
