@@ -71,6 +71,15 @@ $ radigo rec -id=LFR -s=20161126010000
 /tmp/radigo/result.mp3
 ```
 
+### ■ rec-live
+
+Record the live streaming program.
+
+```bash
+$ radigo rec-live -id=LFR -t=3600
+/tmp/radigo/result.mp3
+```
+
 #### - cleanup
 
 ```bash
