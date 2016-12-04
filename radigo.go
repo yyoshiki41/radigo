@@ -9,7 +9,8 @@ import (
 )
 
 const (
-	version = "0.1.0"
+	version        = "0.1.0"
+	envRardigoHome = "RADIGO_HOME"
 
 	tz             = "Asia/Tokyo"
 	datetimeLayout = "20060102150405"
@@ -28,7 +29,7 @@ func init() {
 
 	// If the environment variable RADIGO_HOME is set,
 	// override working directory path.
-	if e := os.Getenv("RADIGO_HOME"); e != "" {
+	if e := os.Getenv(envRardigoHome); e != "" {
 		radigoPath = e
 	}
 

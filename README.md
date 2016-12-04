@@ -30,7 +30,7 @@ $ make init
 
 If you want to change output dir, set the environment variables.
 
-- `RADIKO_HOME` (default: `/tmp/radigo`)
+- `RADIGO_HOME` (default: `/tmp/radigo`)
 
 If use the [area free](http://radiko.jp/rg/premium/), set the environment variables.
 
@@ -44,8 +44,9 @@ $ radigo help
 usage: radigo [--version] [--help] <command> [<args>]
 
 Available commands are:
-    area    Get available station ids
-    rec     Record a radiko program
+    area        Get available station ids
+    rec         Record a radiko program
+    rec-live    Record a live program
 ```
 
 ### ■ area
@@ -73,7 +74,14 @@ Record the program using the [timefree](http://radiko.jp/#!/fun/timeshift).
 
 ```bash
 $ radigo rec -id=LFR -s=20161126010000
-/tmp/radigo/result.mp3
+Now donwloading..
++------------+---------------------------------+
+| STATION ID |              TITLE              |
++------------+---------------------------------+
+| LFR        |　　  オードリーのオールナイトニッポン |
++------------+---------------------------------+
+Completed!
+/tmp/radigo/20161126010000-LFR.mp3
 ```
 
 ### ■ rec-live
@@ -82,7 +90,14 @@ Record the live streaming program.
 
 ```bash
 $ radigo rec-live -id=LFR -t=3600
-/tmp/radigo/result.mp3
+Now donwloading..
++------------+---------------+
+| STATION ID | DURATION(SEC) |
++------------+---------------+
+| LFR        |          3600 |
++------------+---------------+
+Completed!
+/tmp/radigo/20161205083547-LFR.mp3
 ```
 
 ### Cleanup
