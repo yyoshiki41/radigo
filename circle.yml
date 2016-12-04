@@ -1,0 +1,18 @@
+machine:
+  timezone:
+    Asia/Tokyo
+
+dependencies:
+  cache_directories:
+    - $CIRCLE_PROJECT_HOME/vendor
+  pre:
+    - curl https://glide.sh/get | sh
+
+test:
+  pre:
+    - glide i
+    - make init
+  override:
+    - make test-cover
+  post:
+    - bash <(curl -s https://codecov.io/bash)
