@@ -10,11 +10,17 @@ import (
 	"sync"
 )
 
-func BulkDownload(list []string, output string) error {
-	const maxAttempts = 5
+const (
+	maxAttempts    = 4
+	maxConcurrents = 64
+)
 
+var sem = make(chan struct{}, maxConcurrents)
+
+func BulkDownload(list []string, output string) error {
 	var errFlag bool
 	var wg sync.WaitGroup
+
 	for _, v := range list {
 		wg.Add(1)
 		go func(link string) {
@@ -22,7 +28,9 @@ func BulkDownload(list []string, output string) error {
 
 			var err error
 			for i := 0; i < maxAttempts; i++ {
+				sem <- struct{}{}
 				err = download(link, output)
+				<-sem
 				if err == nil {
 					break
 				}

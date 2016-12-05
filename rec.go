@@ -67,6 +67,7 @@ func (c *recCommand) Run(args []string) int {
 		return 1
 	}
 
+	// TODO: AuthToken の cache を使う
 	client, err := getClient("", areaID)
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
@@ -81,6 +82,7 @@ func (c *recCommand) Run(args []string) int {
 	}
 
 	go func() {
+		// FIXME: pgが見つからなければ、中断
 		pg, _ := client.GetProgramByStartTime(context.Background(), stationID, startTime)
 		table := tablewriter.NewWriter(os.Stdout)
 		table.SetHeader([]string{"STATION ID", "TITLE"})

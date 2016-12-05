@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	version        = "0.1.0"
+	version        = "0.2.0"
 	envRardigoHome = "RADIGO_HOME"
 
 	tz             = "Asia/Tokyo"
