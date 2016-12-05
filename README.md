@@ -26,11 +26,17 @@ $ go get github.com/yyoshiki41/radigo/cmd/radigo/...
 $ make init
 ```
 
-#### - Optional (radiko premium)
+### Optional
 
-If you want to change output dir, set the environment variables.
+#### - working dir
 
-- `RADIGO_HOME` (default: `/tmp/radigo`)
+Default: `/tmp/radigo`
+
+If you want to change the working dir, set the environment variables.
+
+- `RADIGO_HOME`
+
+#### - radiko premium
 
 If use the [area free](http://radiko.jp/rg/premium/), set the environment variables.
 
@@ -81,7 +87,7 @@ Now donwloading..
 | LFR        |　　  オードリーのオールナイトニッポン |
 +------------+---------------------------------+
 Completed!
-/tmp/radigo/20161126010000-LFR.mp3
+/tmp/radigo/output/20161126010000-LFR.mp3
 ```
 
 ### ■ rec-live
@@ -97,7 +103,7 @@ Now donwloading..
 | LFR        |          3600 |
 +------------+---------------+
 Completed!
-/tmp/radigo/20161205083547-LFR.mp3
+/tmp/radigo/output/20161205083547-LFR.mp3
 ```
 
 ### Cleanup

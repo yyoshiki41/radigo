@@ -133,7 +133,7 @@ func (c *recLiveCommand) Run(args []string) int {
 	}
 	ffmpegCmd.Stdout = os.Stdout
 
-	outputFile := path.Join(radigoPath,
+	outputFile := path.Join(radigoPath, "output",
 		fmt.Sprintf("%s-%s.mp3",
 			time.Now().In(location).Format(datetimeLayout), stationID,
 		))

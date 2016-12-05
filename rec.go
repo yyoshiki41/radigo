@@ -117,7 +117,7 @@ func (c *recCommand) Run(args []string) int {
 		return 1
 	}
 
-	outputFile := path.Join(radigoPath,
+	outputFile := path.Join(radigoPath, "output",
 		fmt.Sprintf("%s-%s.mp3",
 			startTime.In(location).Format(datetimeLayout), stationID,
 		))
