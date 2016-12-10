@@ -25,7 +25,7 @@ func (c *recLiveCommand) Run(args []string) int {
 		flagForce                   bool
 	)
 
-	f := flag.NewFlagSet("rec", flag.ContinueOnError)
+	f := flag.NewFlagSet("rec-live", flag.ContinueOnError)
 	f.StringVar(&stationID, "id", "", "id")
 	f.StringVar(&duration, "time", "", "duration")
 	f.StringVar(&duration, "t", "", "duration")

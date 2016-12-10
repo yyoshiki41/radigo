@@ -9,18 +9,16 @@ import (
 var Ui cli.Ui
 
 const (
-	outputPrefix = "OUTPUT: "
-	infoPrefix   = "INFO: "
-	errorPrefix  = "ERROR: "
-	warnPrefix   = "WARN: "
+	infoPrefix  = "INFO: "
+	errorPrefix = "ERROR: "
+	warnPrefix  = "WARN: "
 )
 
 func init() {
 	Ui = &cli.PrefixedUi{
-		OutputPrefix: outputPrefix,
-		InfoPrefix:   infoPrefix,
-		ErrorPrefix:  errorPrefix,
-		WarnPrefix:   warnPrefix,
+		InfoPrefix:  infoPrefix,
+		ErrorPrefix: errorPrefix,
+		WarnPrefix:  warnPrefix,
 		Ui: &cli.BasicUi{
 			Writer: os.Stdout,
 		},
@@ -41,6 +39,18 @@ func RecCommandFactory() (cli.Command, error) {
 
 func RecLiveCommandFactory() (cli.Command, error) {
 	return &recLiveCommand{
+		ui: Ui,
+	}, nil
+}
+
+func BrowseCommandFactory() (cli.Command, error) {
+	return &browseCommand{
+		ui: Ui,
+	}, nil
+}
+
+func BrowseLiveCommandFactory() (cli.Command, error) {
+	return &browseLiveCommand{
 		ui: Ui,
 	}, nil
 }
