@@ -20,8 +20,10 @@ type recLiveCommand struct {
 }
 
 func (c *recLiveCommand) Run(args []string) int {
-	var stationID, duration, areaID string
-	var flagForce bool
+	var (
+		stationID, duration, areaID string
+		flagForce                   bool
+	)
 
 	f := flag.NewFlagSet("rec", flag.ContinueOnError)
 	f.StringVar(&stationID, "id", "", "id")
@@ -43,6 +45,11 @@ func (c *recLiveCommand) Run(args []string) int {
 	if duration == "" {
 		c.ui.Error("Duration is empty.")
 		return 1
+	}
+
+	if flagForce {
+		removeTokenCache()
+		c.ui.Info("Delete token cache.")
 	}
 
 	fmt.Println("Now downloading.. ")
@@ -72,17 +79,22 @@ func (c *recLiveCommand) Run(args []string) int {
 	ctx, ctxCancel := context.WithCancel(context.Background())
 	defer ctxCancel()
 
-	client, err := getClient(ctx, "", areaID)
+	client, err := getClient(ctx, areaID)
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to construct a radiko Client: %s", err))
 		return 1
 	}
-	_, err = client.AuthorizeToken(ctx, pngFile)
-	if err != nil {
-		c.ui.Error(fmt.Sprintf(
-			"Failed to get auth_token: %s", err))
-		return 1
+	if client.AuthToken() == "" {
+		token, err := client.AuthorizeToken(ctx, pngFile)
+		if err != nil {
+			c.ui.Error(fmt.Sprintf(
+				"Failed to get auth_token: %s", err))
+			return 1
+		}
+		if err := saveToken(token); err != nil {
+			c.ui.Info("Save token cache.")
+		}
 	}
 
 	items, err := radiko.GetStreamMultiURL(stationID)

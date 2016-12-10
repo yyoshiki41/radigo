@@ -13,9 +13,15 @@ const (
 	envRadikoPassword = "RADIKO_PASSWORD"
 )
 
-func getClient(ctx context.Context, authToken, areaID string) (*radiko.Client, error) {
+func getClient(ctx context.Context, areaID string) (*radiko.Client, error) {
 	var client *radiko.Client
+	var authToken string
 	var err error
+
+	authToken, err = getTokenCache()
+	if err != nil {
+		authToken = ""
+	}
 
 	switch {
 	case areaID != "" && areaID != currentAreaID:
@@ -27,7 +33,7 @@ func getClient(ctx context.Context, authToken, areaID string) (*radiko.Client, e
 		}
 		client.SetAreaID(areaID)
 	default:
-		client, err = radiko.New("")
+		client, err = radiko.New(authToken)
 	}
 
 	if err != nil {

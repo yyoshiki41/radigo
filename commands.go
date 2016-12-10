@@ -8,9 +8,22 @@ import (
 
 var Ui cli.Ui
 
+const (
+	outputPrefix = "OUTPUT: "
+	infoPrefix   = "INFO: "
+	errorPrefix  = "ERROR: "
+	warnPrefix   = "WARN: "
+)
+
 func init() {
-	Ui = &cli.BasicUi{
-		Writer: os.Stdout,
+	Ui = &cli.PrefixedUi{
+		OutputPrefix: outputPrefix,
+		InfoPrefix:   infoPrefix,
+		ErrorPrefix:  errorPrefix,
+		WarnPrefix:   warnPrefix,
+		Ui: &cli.BasicUi{
+			Writer: os.Stdout,
+		},
 	}
 }
 

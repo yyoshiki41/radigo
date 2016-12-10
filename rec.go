@@ -21,8 +21,10 @@ type recCommand struct {
 }
 
 func (c *recCommand) Run(args []string) int {
-	var stationID, start, areaID string
-	var flagForce bool
+	var (
+		stationID, start, areaID string
+		flagForce                bool
+	)
 
 	f := flag.NewFlagSet("rec", flag.ContinueOnError)
 	f.StringVar(&stationID, "id", "", "id")
@@ -41,12 +43,16 @@ func (c *recCommand) Run(args []string) int {
 		c.ui.Error("StationID is empty.")
 		return 1
 	}
-
 	startTime, err := time.ParseInLocation(datetimeLayout, start, location)
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
-			"invalid start time format: %s", start))
+			"Invalid start time format: %s", start))
 		return 1
+	}
+
+	if flagForce {
+		removeTokenCache()
+		c.ui.Info("Delete token cache.")
 	}
 
 	fmt.Println("Now downloading.. ")
@@ -71,18 +77,22 @@ func (c *recCommand) Run(args []string) int {
 	ctx, ctxCancel := context.WithCancel(context.Background())
 	defer ctxCancel()
 
-	// TODO: AuthToken の cache を使う
-	client, err := getClient(ctx, "", areaID)
+	client, err := getClient(ctx, areaID)
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to construct a radiko Client: %s", err))
 		return 1
 	}
-	_, err = client.AuthorizeToken(ctx, pngFile)
-	if err != nil {
-		c.ui.Error(fmt.Sprintf(
-			"Failed to get auth_token: %s", err))
-		return 1
+	if client.AuthToken() == "" {
+		token, err := client.AuthorizeToken(ctx, pngFile)
+		if err != nil {
+			c.ui.Error(fmt.Sprintf(
+				"Failed to get auth_token: %s", err))
+			return 1
+		}
+		if err := saveToken(token); err != nil {
+			c.ui.Info("Save token cache.")
+		}
 	}
 
 	go func() {
