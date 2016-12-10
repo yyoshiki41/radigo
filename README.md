@@ -80,7 +80,7 @@ Record the program using the [timefree](http://radiko.jp/#!/fun/timeshift).
 
 ```bash
 $ radigo rec -id=LFR -s=20161126010000
-Now donwloading..
+Now downloading..
 +------------+---------------------------------+
 | STATION ID |              TITLE              |
 +------------+---------------------------------+
@@ -96,7 +96,7 @@ Record the live streaming program.
 
 ```bash
 $ radigo rec-live -id=LFR -t=3600
-Now donwloading..
+Now downloading..
 +------------+---------------+
 | STATION ID | DURATION(SEC) |
 +------------+---------------+
