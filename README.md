@@ -33,9 +33,11 @@ $ radigo help
 usage: radigo [--version] [--help] <command> [<args>]
 
 Available commands are:
-    area        Get available station ids
-    rec         Record a radiko program
-    rec-live    Record a live program
+    area           Get available station ids
+    browse         Browse radiko.jp
+    browse-live    Browse radiko.jp live
+    rec            Record a radiko program
+    rec-live       Record a live program
 ```
 
 ### ■ area
@@ -87,6 +89,18 @@ Now downloading..
 +------------+---------------+
 Completed!
 /tmp/radigo/output/20161205083547-LFR.mp3
+```
+
+### ■ browse / browse-live
+
+Browse [radiko.jp](http://radiko.jp/).
+
+```bash
+$ radigo browse -id=LFR -s=20161126010000
+```
+
+```bash
+$ radigo browse-live -id=LFR
 ```
 
 ### Optional
