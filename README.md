@@ -26,23 +26,6 @@ $ go get github.com/yyoshiki41/radigo/cmd/radigo/...
 $ make init
 ```
 
-### Optional
-
-#### - working dir
-
-Default: `/tmp/radigo`
-
-If you want to change the working dir, set the environment variables.
-
-- `RADIGO_HOME`
-
-#### - radiko premium
-
-If use the [area free](http://radiko.jp/rg/premium/), set the environment variables.
-
-- `RADIKO_MAIL`
-- `RADIKO_PASSWORD`
-
 ## Usage
 
 ```bash
@@ -106,7 +89,24 @@ Completed!
 /tmp/radigo/output/20161205083547-LFR.mp3
 ```
 
-### Cleanup
+### Optional
+
+#### - working dir
+
+Default: `/tmp/radigo`
+
+If you want to change the working dir, set the environment variables.
+
+- `RADIGO_HOME`
+
+#### - radiko premium
+
+If use the [area free](http://radiko.jp/rg/premium/), set the environment variables.
+
+- `RADIKO_MAIL`
+- `RADIKO_PASSWORD`
+
+#### Cleanup
 
 Remove cache and force refresh.
 
