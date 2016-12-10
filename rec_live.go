@@ -45,7 +45,7 @@ func (c *recLiveCommand) Run(args []string) int {
 		return 1
 	}
 
-	fmt.Println("Now donwloading.. ")
+	fmt.Println("Now downloading.. ")
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader([]string{"Station ID", "Duration(sec)"})
 	table.Append([]string{stationID, duration})
@@ -53,6 +53,7 @@ func (c *recLiveCommand) Run(args []string) int {
 
 	spin := spinner.New(spinner.CharSets[9], time.Second)
 	spin.Start()
+	defer spin.Stop()
 
 	err := downloadSwfPlayer(flagForce)
 	if err != nil {
@@ -68,13 +69,16 @@ func (c *recLiveCommand) Run(args []string) int {
 		return 1
 	}
 
-	client, err := getClient("", areaID)
+	ctx, ctxCancel := context.WithCancel(context.Background())
+	defer ctxCancel()
+
+	client, err := getClient(ctx, "", areaID)
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to construct a radiko Client: %s", err))
 		return 1
 	}
-	_, err = client.AuthorizeToken(context.Background(), pngFile)
+	_, err = client.AuthorizeToken(ctx, pngFile)
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to get auth_token: %s", err))
@@ -105,14 +109,14 @@ func (c *recLiveCommand) Run(args []string) int {
 		}
 	}
 
-	rtmpdumpCmd, err := newRtmpdump(streamURL, client.AuthToken(), duration)
+	rtmpdumpCmd, err := newRtmpdump(ctx, streamURL, client.AuthToken(), duration)
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to construct rtmpdump command: %s", err))
 		return 1
 	}
 
-	ffmpegCmd, err := newFfmpeg("-")
+	ffmpegCmd, err := newFfmpeg(ctx, "-")
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to construct ffmpeg command: %s", err))
@@ -145,9 +149,14 @@ func (c *recLiveCommand) Run(args []string) int {
 		return 1
 	}
 
-	// TODO:
-	// context 使って、Runが失敗したらffmpegCmdをkillする
-	go rtmpdumpCmd.Run()
+	go func() {
+		err := rtmpdumpCmd.Run()
+		if err != nil {
+			ctxCancel()
+			c.ui.Error(fmt.Sprintf(
+				"Failed to execute rtmpdump command: %s", err))
+		}
+	}()
 
 	err = ffmpegCmd.Wait()
 	if err != nil {
@@ -156,7 +165,6 @@ func (c *recLiveCommand) Run(args []string) int {
 		return 1
 	}
 
-	spin.Stop()
 	c.ui.Output(fmt.Sprintf(
 		"Completed!\n%s", outputFile))
 

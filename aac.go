@@ -1,6 +1,7 @@
 package radigo
 
 import (
+	"context"
 	"fmt"
 	"io/ioutil"
 	"path"
@@ -20,25 +21,25 @@ func initTempAACDir() (string, error) {
 	return aacDir, nil
 }
 
-func outputMP3(aacDir, outputFile string) error {
-	if err := createConcatedAACFile(aacDir); err != nil {
+func outputMP3(ctx context.Context, aacDir, outputFile string) error {
+	if err := createConcatedAACFile(ctx, aacDir); err != nil {
 		return err
 	}
 
-	if err := convertAACToMP3(outputFile); err != nil {
+	if err := convertAACToMP3(ctx, outputFile); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func createConcatedAACFile(aacDir string) error {
+func createConcatedAACFile(ctx context.Context, aacDir string) error {
 	name, err := internal.ConcatFileNames(aacDir)
 	if err != nil {
 		return err
 	}
 
-	f, err := newFfmpeg(fmt.Sprintf("concat:%s", name))
+	f, err := newFfmpeg(ctx, fmt.Sprintf("concat:%s", name))
 	if err != nil {
 		return err
 	}
@@ -49,8 +50,8 @@ func createConcatedAACFile(aacDir string) error {
 	return f.run(aacResultFile)
 }
 
-func convertAACToMP3(outputFile string) error {
-	f, err := newFfmpeg(aacResultFile)
+func convertAACToMP3(ctx context.Context, outputFile string) error {
+	f, err := newFfmpeg(ctx, aacResultFile)
 	if err != nil {
 		return err
 	}

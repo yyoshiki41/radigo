@@ -1,6 +1,7 @@
 package radigo
 
 import (
+	"context"
 	"fmt"
 	"net/url"
 	"os/exec"
@@ -12,7 +13,7 @@ type rtmpdump struct {
 	*exec.Cmd
 }
 
-func newRtmpdump(streamURL, authToken, duration string) (*rtmpdump, error) {
+func newRtmpdump(ctx context.Context, streamURL, authToken, duration string) (*rtmpdump, error) {
 	cmdPath, err := exec.LookPath("rtmpdump")
 	if err != nil {
 		return nil, err
@@ -28,7 +29,8 @@ func newRtmpdump(streamURL, authToken, duration string) (*rtmpdump, error) {
 	argApp = strings.TrimPrefix(argApp, "/")
 	argApp = strings.TrimSuffix(argApp, "/")
 
-	return &rtmpdump{exec.Command(
+	return &rtmpdump{exec.CommandContext(
+		ctx,
 		cmdPath,
 		"--live",
 		"--rtmp", argRTMP,

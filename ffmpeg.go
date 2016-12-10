@@ -1,18 +1,22 @@
 package radigo
 
-import "os/exec"
+import (
+	"context"
+	"os/exec"
+)
 
 type ffmpeg struct {
 	*exec.Cmd
 }
 
-func newFfmpeg(input string) (*ffmpeg, error) {
+func newFfmpeg(ctx context.Context, input string) (*ffmpeg, error) {
 	cmdPath, err := exec.LookPath("ffmpeg")
 	if err != nil {
 		return nil, err
 	}
 
-	return &ffmpeg{exec.Command(
+	return &ffmpeg{exec.CommandContext(
+		ctx,
 		cmdPath,
 		"-i", input,
 	)}, nil

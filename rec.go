@@ -49,9 +49,10 @@ func (c *recCommand) Run(args []string) int {
 		return 1
 	}
 
-	fmt.Print("Now donwloading.. ")
+	fmt.Println("Now downloading.. ")
 	spin := spinner.New(spinner.CharSets[9], time.Second)
 	spin.Start()
+	defer spin.Stop()
 
 	err = downloadSwfPlayer(flagForce)
 	if err != nil {
@@ -67,14 +68,17 @@ func (c *recCommand) Run(args []string) int {
 		return 1
 	}
 
+	ctx, ctxCancel := context.WithCancel(context.Background())
+	defer ctxCancel()
+
 	// TODO: AuthToken の cache を使う
-	client, err := getClient("", areaID)
+	client, err := getClient(ctx, "", areaID)
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to construct a radiko Client: %s", err))
 		return 1
 	}
-	_, err = client.AuthorizeToken(context.Background(), pngFile)
+	_, err = client.AuthorizeToken(ctx, pngFile)
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to get auth_token: %s", err))
@@ -82,16 +86,21 @@ func (c *recCommand) Run(args []string) int {
 	}
 
 	go func() {
-		// FIXME: pgが見つからなければ、中断
-		pg, _ := client.GetProgramByStartTime(context.Background(), stationID, startTime)
+		pg, err := client.GetProgramByStartTime(ctx, stationID, startTime)
+		if err != nil {
+			ctxCancel()
+			c.ui.Error(fmt.Sprintf(
+				"Failed to get the program: %s", err))
+		}
+
 		table := tablewriter.NewWriter(os.Stdout)
 		table.SetHeader([]string{"STATION ID", "TITLE"})
 		table.Append([]string{stationID, pg.Title})
-		fmt.Println()
+		fmt.Print("\n")
 		table.Render()
 	}()
 
-	uri, err := client.TimeshiftPlaylistM3U8(context.Background(), stationID, startTime)
+	uri, err := client.TimeshiftPlaylistM3U8(ctx, stationID, startTime)
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to get playlist.m3u8: %s", err))
@@ -124,13 +133,12 @@ func (c *recCommand) Run(args []string) int {
 			startTime.In(location).Format(datetimeLayout), stationID,
 		))
 
-	if err := outputMP3(aacDir, outputFile); err != nil {
+	if err := outputMP3(ctx, aacDir, outputFile); err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to output mp3 file: %s", err))
 		return 1
 	}
 
-	spin.Stop()
 	c.ui.Output(fmt.Sprintf(
 		"Completed!\n%s", outputFile))
 
