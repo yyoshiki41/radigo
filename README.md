@@ -128,6 +128,10 @@ Remove cache and force refresh.
 $ make clean
 ```
 
+## Docs
+
+- [Japanese](http://qiita.com/yyoshiki41/items/f81442d7dc2d0ddcf15b)
+
 ## License 
 
 The MIT License
