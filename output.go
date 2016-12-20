@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io/ioutil"
+	"os"
 	"path"
 
 	"github.com/yyoshiki41/radigo/internal"
@@ -19,18 +20,6 @@ func initTempAACDir() (string, error) {
 
 	aacResultFile = path.Join(aacDir, "result.aac")
 	return aacDir, nil
-}
-
-func outputMP3(ctx context.Context, aacDir, outputFile string) error {
-	if err := createConcatedAACFile(ctx, aacDir); err != nil {
-		return err
-	}
-
-	if err := convertAACToMP3(ctx, outputFile); err != nil {
-		return err
-	}
-
-	return nil
 }
 
 func createConcatedAACFile(ctx context.Context, aacDir string) error {
@@ -50,7 +39,24 @@ func createConcatedAACFile(ctx context.Context, aacDir string) error {
 	return f.run(aacResultFile)
 }
 
-func convertAACToMP3(ctx context.Context, outputFile string) error {
+func output(ctx context.Context, fileType, outputFile string) error {
+	switch fileType {
+	case "mp3":
+		return outputMP3(ctx, outputFile)
+	case "aac":
+		return outputAAC(outputFile)
+	}
+	return fmt.Errorf("Unsupported file type: %s", fileType)
+}
+
+func outputAAC(outputFile string) error {
+	if err := os.Rename(aacResultFile, outputFile); err != nil {
+		return err
+	}
+	return nil
+}
+
+func outputMP3(ctx context.Context, outputFile string) error {
 	f, err := newFfmpeg(ctx, aacResultFile)
 	if err != nil {
 		return err

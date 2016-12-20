@@ -22,8 +22,8 @@ type recCommand struct {
 
 func (c *recCommand) Run(args []string) int {
 	var (
-		stationID, start, areaID string
-		flagForce                bool
+		stationID, start, areaID, fileType string
+		flagForce                          bool
 	)
 
 	f := flag.NewFlagSet("rec", flag.ContinueOnError)
@@ -32,8 +32,11 @@ func (c *recCommand) Run(args []string) int {
 	f.StringVar(&start, "s", "", "start")
 	f.StringVar(&areaID, "area", "", "area")
 	f.StringVar(&areaID, "a", "", "area")
+	f.StringVar(&fileType, "output", "", "output")
+	f.StringVar(&fileType, "o", "", "output")
 	f.BoolVar(&flagForce, "force", false, "force")
 	f.BoolVar(&flagForce, "f", false, "force")
+	f.BoolVar(&flagForce, "aac", false, "aac")
 	f.Usage = func() { c.ui.Error(c.Help()) }
 	if err := f.Parse(args); err != nil {
 		return 1
@@ -47,6 +50,14 @@ func (c *recCommand) Run(args []string) int {
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Invalid start time format: %s", start))
+		return 1
+	}
+	if fileType == "" {
+		fileType = "mp3"
+	}
+	if fileType != "mp3" && fileType != "aac" {
+		c.ui.Error(fmt.Sprintf(
+			"Unsupported file type: %s", fileType))
 		return 1
 	}
 
@@ -137,15 +148,20 @@ func (c *recCommand) Run(args []string) int {
 			"Failed to download aac files: %s", err))
 		return 1
 	}
+	if err := createConcatedAACFile(ctx, aacDir); err != nil {
+		c.ui.Error(fmt.Sprintf(
+			"Failed to concat aac files: %s", err))
+		return 1
+	}
 
 	outputFile := path.Join(radigoPath, "output",
-		fmt.Sprintf("%s-%s.mp3",
-			startTime.In(location).Format(datetimeLayout), stationID,
+		fmt.Sprintf("%s-%s.%s",
+			startTime.In(location).Format(datetimeLayout), stationID, fileType,
 		))
 
-	if err := outputMP3(ctx, aacDir, outputFile); err != nil {
+	if err := output(ctx, fileType, outputFile); err != nil {
 		c.ui.Error(fmt.Sprintf(
-			"Failed to output mp3 file: %s", err))
+			"Failed to output a result file: %s", err))
 		return 1
 	}
 
@@ -166,6 +182,7 @@ Usage: radigo rec [options]
 Options:
   -id=name                 Station id
   -start,s=201610101000    Start time
+  -o,output=mp3            Output file type (mp3, aac)
   -area,a=name             Area id
   -force,-f                Ignore cache and force refresh
 `)
