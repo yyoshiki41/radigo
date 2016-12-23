@@ -4,6 +4,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+	"time"
 )
 
 var (
@@ -30,6 +31,17 @@ func removeTokenCache() error {
 		return err
 	}
 	return nil
+}
+
+func isExpiredCache() bool {
+	f, err := os.Stat(tokenCache)
+	if err != nil {
+		return false
+	}
+
+	// cache lifetime is 2 hours.
+	expireationDate := f.ModTime().Add(2 * time.Hour)
+	return time.Now().After(expireationDate)
 }
 
 func saveToken(authToken string) error {

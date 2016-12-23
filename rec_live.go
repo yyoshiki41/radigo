@@ -47,7 +47,8 @@ func (c *recLiveCommand) Run(args []string) int {
 		return 1
 	}
 
-	if flagForce {
+	// if expiration date has passed, remove cache files
+	if flagForce || isExpiredCache() {
 		removeTokenCache()
 		c.ui.Info("Delete token cache.")
 	}

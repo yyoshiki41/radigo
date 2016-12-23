@@ -60,7 +60,7 @@ func (c *recCommand) Run(args []string) int {
 		return 1
 	}
 
-	if flagForce {
+	if flagForce || isExpiredCache() {
 		removeTokenCache()
 		c.ui.Info("Delete token cache.")
 	}
