@@ -146,7 +146,6 @@ func (c *recLiveCommand) Run(args []string) int {
 		c.ui.Error(fmt.Sprintf("%v", err))
 		return 1
 	}
-	ffmpegCmd.Stdout = os.Stdout
 
 	outputFile := path.Join(radigoPath, "output",
 		fmt.Sprintf("%s-%s.mp3",
