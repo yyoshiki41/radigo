@@ -67,6 +67,7 @@ func outputMP3(ctx context.Context, outputFile string) error {
 		"-c:a", "libmp3lame",
 		"-ac", "2",
 		"-q:a", "2",
+		"-y", // overwrite the output file without asking
 	)
 	// TODO: Run 結果の標準出力を拾う
 	return f.run(outputFile)

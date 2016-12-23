@@ -52,7 +52,7 @@ func (c *recLiveCommand) Run(args []string) int {
 		c.ui.Info("Delete token cache.")
 	}
 
-	fmt.Println("Now downloading.. ")
+	c.ui.Output("Now downloading.. ")
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader([]string{"Station ID", "Duration(sec)"})
 	table.Append([]string{stationID, duration})
@@ -62,15 +62,13 @@ func (c *recLiveCommand) Run(args []string) int {
 	spin.Start()
 	defer spin.Stop()
 
-	err := downloadSwfPlayer(flagForce)
-	if err != nil {
+	if err := downloadSwfPlayer(flagForce); err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to download player.swf: %s", err))
 		return 1
 	}
 
-	err = extractPngFile(flagForce)
-	if err != nil {
+	if err := extractPngFile(flagForce); err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to execute swfextract: %s", err))
 		return 1
@@ -177,8 +175,7 @@ func (c *recLiveCommand) Run(args []string) int {
 		return 1
 	}
 
-	c.ui.Output(fmt.Sprintf(
-		"Completed!\n%s", outputFile))
+	c.ui.Output(fmt.Sprintf("Completed!\n%s", outputFile))
 
 	return 0
 }

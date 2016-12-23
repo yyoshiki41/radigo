@@ -36,7 +36,6 @@ func (c *recCommand) Run(args []string) int {
 	f.StringVar(&fileType, "o", "", "output")
 	f.BoolVar(&flagForce, "force", false, "force")
 	f.BoolVar(&flagForce, "f", false, "force")
-	f.BoolVar(&flagForce, "aac", false, "aac")
 	f.Usage = func() { c.ui.Error(c.Help()) }
 	if err := f.Parse(args); err != nil {
 		return 1
@@ -66,20 +65,18 @@ func (c *recCommand) Run(args []string) int {
 		c.ui.Info("Delete token cache.")
 	}
 
-	fmt.Println("Now downloading.. ")
+	c.ui.Output("Now downloading.. ")
 	spin := spinner.New(spinner.CharSets[9], time.Second)
 	spin.Start()
 	defer spin.Stop()
 
-	err = downloadSwfPlayer(flagForce)
-	if err != nil {
+	if err := downloadSwfPlayer(flagForce); err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to download player.swf: %s", err))
 		return 1
 	}
 
-	err = extractPngFile(flagForce)
-	if err != nil {
+	if err := extractPngFile(flagForce); err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to execute swfextract: %s", err))
 		return 1
@@ -165,8 +162,7 @@ func (c *recCommand) Run(args []string) int {
 		return 1
 	}
 
-	c.ui.Output(fmt.Sprintf(
-		"Completed!\n%s", outputFile))
+	c.ui.Output(fmt.Sprintf("Completed!\n%s", outputFile))
 
 	return 0
 }
@@ -182,8 +178,8 @@ Usage: radigo rec [options]
 Options:
   -id=name                 Station id
   -start,s=201610101000    Start time
-  -o,output=mp3            Output file type (mp3, aac)
+  -output,o=mp3            Output file type (mp3, aac)
   -area,a=name             Area id
-  -force,-f                Ignore cache and force refresh
+  -force,f                 Ignore cache and force refresh
 `)
 }
