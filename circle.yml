@@ -2,7 +2,7 @@ machine:
   timezone:
     Asia/Tokyo
   environment:
-    GODIST: "go1.7.3.linux-amd64.tar.gz"
+    GODIST: "go1.7.4.linux-amd64.tar.gz"
     GITHUB_DIR: "${HOME}/.go_workspace/src/github.com"
     TEST_DIR: "${GITHUB_DIR}/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}"
   post:
