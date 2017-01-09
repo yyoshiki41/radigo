@@ -3,7 +3,8 @@ machine:
     Asia/Tokyo
   environment:
     GODIST: "go1.7.4.linux-amd64.tar.gz"
-    GITHUB_DIR: "${HOME}/.go_workspace/src/github.com"
+    WORK_SPACE: "${HOME}/.go_workspace/src"
+    GITHUB_DIR: "${WORK_SPACE}/github.com"
     TEST_DIR: "${GITHUB_DIR}/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}"
   post:
     - mkdir -p downloads
@@ -18,7 +19,7 @@ dependencies:
     - sudo add-apt-repository -y ppa:masterminds/glide; sudo apt-get update;
     - sudo apt-get install glide
   override:
-    - mkdir -p $HOME/.go_workspace/src
+    - mkdir -p $WORK_SPACE
     # Install packages and dependencies.
     - glide i
     # Create a symbolic link.
