@@ -10,15 +10,15 @@ var Ui cli.Ui
 
 const (
 	infoPrefix  = "INFO: "
-	errorPrefix = "ERROR: "
 	warnPrefix  = "WARN: "
+	errorPrefix = "ERROR: "
 )
 
 func init() {
 	Ui = &cli.PrefixedUi{
 		InfoPrefix:  infoPrefix,
-		ErrorPrefix: errorPrefix,
 		WarnPrefix:  warnPrefix,
+		ErrorPrefix: errorPrefix,
 		Ui: &cli.BasicUi{
 			Writer: os.Stdout,
 		},
