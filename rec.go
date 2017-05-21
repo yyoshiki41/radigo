@@ -52,7 +52,7 @@ func (c *recCommand) Run(args []string) int {
 		return 1
 	}
 	if fileType == "" {
-		fileType = "mp3"
+		fileType = "aac"
 	}
 	if fileType != "mp3" && fileType != "aac" {
 		c.ui.Error(fmt.Sprintf(
