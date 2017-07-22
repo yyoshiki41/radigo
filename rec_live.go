@@ -20,10 +20,7 @@ type recLiveCommand struct {
 }
 
 func (c *recLiveCommand) Run(args []string) int {
-	var (
-		stationID, duration, areaID string
-		flagForce                   bool
-	)
+	var stationID, duration, areaID string
 
 	f := flag.NewFlagSet("rec-live", flag.ContinueOnError)
 	f.StringVar(&stationID, "id", "", "id")
@@ -31,8 +28,6 @@ func (c *recLiveCommand) Run(args []string) int {
 	f.StringVar(&duration, "t", "", "duration")
 	f.StringVar(&areaID, "area", "", "area")
 	f.StringVar(&areaID, "a", "", "area")
-	f.BoolVar(&flagForce, "force", false, "force")
-	f.BoolVar(&flagForce, "f", false, "force")
 	f.Usage = func() { c.ui.Error(c.Help()) }
 	if err := f.Parse(args); err != nil {
 		return 1
@@ -47,12 +42,6 @@ func (c *recLiveCommand) Run(args []string) int {
 		return 1
 	}
 
-	// if expiration date has passed, remove cache files
-	if flagForce || isExpiredCache() {
-		removeTokenCache()
-		c.ui.Info("Delete token cache.")
-	}
-
 	c.ui.Output("Now downloading.. ")
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader([]string{"Station ID", "Duration(sec)"})
@@ -63,7 +52,7 @@ func (c *recLiveCommand) Run(args []string) int {
 	spin.Start()
 	defer spin.Stop()
 
-	if err := downloadSwfPlayer(flagForce); err != nil {
+	if err := downloadSwfPlayer(); err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to download player.swf: %s", err))
 		return 1
@@ -78,16 +67,12 @@ func (c *recLiveCommand) Run(args []string) int {
 			"Failed to construct a radiko Client: %s", err))
 		return 1
 	}
-	if client.AuthToken() == "" {
-		token, err := client.AuthorizeToken(ctx)
-		if err != nil {
-			c.ui.Error(fmt.Sprintf(
-				"Failed to get auth_token: %s", err))
-			return 1
-		}
-		if err := saveToken(token); err != nil {
-			c.ui.Info("Save token cache.")
-		}
+
+	_, err = client.AuthorizeToken(ctx)
+	if err != nil {
+		c.ui.Error(fmt.Sprintf(
+			"Failed to get auth_token: %s", err))
+		return 1
 	}
 
 	items, err := radiko.GetStreamMultiURL(stationID)
@@ -186,6 +171,5 @@ Options:
   -id=name                 Station id
   -time,t=3600             Time duration (sec)
   -area,a=name             Area id
-  -force,-f                Ignore cache and force refresh
 `)
 }
