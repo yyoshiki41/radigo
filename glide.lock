@@ -1,5 +1,5 @@
-hash: 09ae624b1854bf3a54fc45fa3f9ccc719c9d1849ae9369853912c315cb2f6035
-updated: 2017-07-23T00:15:23.967526851+09:00
+hash: 28e0d8fb2a6178937055ada9b5d4f056b1dd0624e34f06efa2239b62d47eb95f
+updated: 2017-07-23T00:34:27.863942507+09:00
 imports:
 - name: github.com/armon/go-radix
   version: 4239b77079c7b5d1243b7b4736304ce8ddb6f0f2
@@ -11,10 +11,6 @@ imports:
   version: bf82308e8c8546dc2b945157173eb8a959ae9505
 - name: github.com/grafov/m3u8
   version: 4c69ce4c839a9b1313fd747e44fe27053bde78e8
-- name: github.com/hashicorp/errwrap
-  version: 7554cd9344cec97297fa6649b055a8c98c2a1e55
-- name: github.com/hashicorp/go-multierror
-  version: 83588e72410abfbe4df460eeb6f30841ae47d4c4
 - name: github.com/mattn/go-colorable
   version: d228849504861217f796da67fae4f6e347643f15
 - name: github.com/mattn/go-isatty
@@ -22,15 +18,9 @@ imports:
 - name: github.com/mattn/go-runewidth
   version: 737072b4e32b7a5018b4a7125da8d12de90e8045
 - name: github.com/mitchellh/cli
-  version: d10eaaaf78c45b8e959311791db9fae4530a61bf
+  version: fa17b36f6c61f1ddbbb08c9f6fde94b3c065a09d
 - name: github.com/olekukonko/tablewriter
   version: bdcc175572fd7abece6c831e643891b9331bc9e7
-- name: github.com/posener/complete
-  version: e8d6fef54b6283f8bd3fbcb4a7de8884eb540293
-  subpackages:
-  - cmd
-  - cmd/install
-  - match
 - name: github.com/yyoshiki41/go-radiko
   version: 5e8a122ed135d2b1f7733af0ff80b0a4b8c481d6
   subpackages:
