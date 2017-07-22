@@ -15,65 +15,44 @@ const (
 
 func getClient(ctx context.Context, areaID string) (*radiko.Client, error) {
 	var client *radiko.Client
-	var authToken string
 	var err error
 
-	authToken, err = getTokenCache()
+	client, err = radiko.New("")
 	if err != nil {
-		authToken = ""
+		return nil, err
 	}
 
-	switch {
-	case areaID != "" && areaID != currentAreaID:
-		// When a currentAreaID is not equal to the given areaID,
-		// it is neccessary to use the area free as the premium member.
-		client, err = newClientPremiumMember(ctx, authToken)
-		if err != nil {
-			return client, err
+	// When a currentAreaID is not equal to the given areaID,
+	// it is neccessary to use the area free as the premium member.
+	if areaID != "" && areaID != currentAreaID {
+		mail := os.Getenv(envRadikoMail)
+		password := os.Getenv(envRadikoPassword)
+
+		login, err := client.Login(ctx, mail, password)
+		switch {
+		case err != nil:
+			return nil, err
+		case login.StatusCode() != 200:
+			return nil, fmt.Errorf(
+				"invalid login status code: %d", login.StatusCode())
+		default:
+			client.SetAreaID(areaID)
 		}
-		client.SetAreaID(areaID)
-	default:
-		client, err = radiko.New(authToken)
-	}
-
-	if err != nil {
-		return nil, err
-	}
-	return client, nil
-}
-
-func newClientPremiumMember(ctx context.Context, authToken string) (*radiko.Client, error) {
-	client, err := radiko.New(authToken)
-	if err != nil {
-		return nil, err
-	}
-
-	mail := os.Getenv(envRadikoMail)
-	password := os.Getenv(envRadikoPassword)
-
-	login, err := client.Login(ctx, mail, password)
-	switch {
-	case err != nil:
-		return nil, err
-	case login.StatusCode() != 200:
-		return nil, fmt.Errorf(
-			"invalid login status code: %d", login.StatusCode())
 	}
 
 	return client, nil
 }
 
-func downloadSwfPlayer(flagForce bool) error {
+func downloadSwfPlayer() error {
 	_, err := os.Stat(swfPlayer)
-	if flagForce && os.IsExist(err) {
-		os.Remove(swfPlayer)
+	if !(os.IsExist(err) || os.IsNotExist(err)) {
+		return err
 	}
 
-	if flagForce || os.IsNotExist(err) {
-		err := radiko.DownloadPlayer(swfPlayer)
-		if err != nil {
+	if os.IsExist(err) {
+		if err := os.Remove(swfPlayer); err != nil {
 			return err
 		}
 	}
-	return nil
+	return radiko.DownloadPlayer(swfPlayer)
 }
