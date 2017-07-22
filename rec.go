@@ -21,10 +21,7 @@ type recCommand struct {
 }
 
 func (c *recCommand) Run(args []string) int {
-	var (
-		stationID, start, areaID, fileType string
-		flagForce                          bool
-	)
+	var stationID, start, areaID, fileType string
 
 	f := flag.NewFlagSet("rec", flag.ContinueOnError)
 	f.StringVar(&stationID, "id", "", "id")
@@ -34,8 +31,6 @@ func (c *recCommand) Run(args []string) int {
 	f.StringVar(&areaID, "a", "", "area")
 	f.StringVar(&fileType, "output", "", "output")
 	f.StringVar(&fileType, "o", "", "output")
-	f.BoolVar(&flagForce, "force", false, "force")
-	f.BoolVar(&flagForce, "f", false, "force")
 	f.Usage = func() { c.ui.Error(c.Help()) }
 	if err := f.Parse(args); err != nil {
 		return 1
@@ -60,27 +55,10 @@ func (c *recCommand) Run(args []string) int {
 		return 1
 	}
 
-	if flagForce || isExpiredCache() {
-		removeTokenCache()
-		c.ui.Info("Delete token cache.")
-	}
-
 	c.ui.Output("Now downloading.. ")
 	spin := spinner.New(spinner.CharSets[9], time.Second)
 	spin.Start()
 	defer spin.Stop()
-
-	if err := downloadSwfPlayer(flagForce); err != nil {
-		c.ui.Error(fmt.Sprintf(
-			"Failed to download player.swf: %s", err))
-		return 1
-	}
-
-	if err := extractPngFile(flagForce); err != nil {
-		c.ui.Error(fmt.Sprintf(
-			"Failed to execute swfextract: %s", err))
-		return 1
-	}
 
 	ctx, ctxCancel := context.WithCancel(context.Background())
 	defer ctxCancel()
@@ -91,16 +69,12 @@ func (c *recCommand) Run(args []string) int {
 			"Failed to construct a radiko Client: %s", err))
 		return 1
 	}
-	if client.AuthToken() == "" {
-		token, err := client.AuthorizeToken(ctx, pngFile)
-		if err != nil {
-			c.ui.Error(fmt.Sprintf(
-				"Failed to get auth_token: %s", err))
-			return 1
-		}
-		if err := saveToken(token); err != nil {
-			c.ui.Info("Save token cache.")
-		}
+
+	_, err = client.AuthorizeToken(ctx)
+	if err != nil {
+		c.ui.Error(fmt.Sprintf(
+			"Failed to get auth_token: %s", err))
+		return 1
 	}
 
 	go func() {
@@ -180,6 +154,5 @@ Options:
   -start,s=201610101000    Start time
   -output,o=mp3            Output file type (mp3, aac)
   -area,a=name             Area id
-  -force,f                 Ignore cache and force refresh
 `)
 }

@@ -69,12 +69,6 @@ func (c *recLiveCommand) Run(args []string) int {
 		return 1
 	}
 
-	if err := extractPngFile(flagForce); err != nil {
-		c.ui.Error(fmt.Sprintf(
-			"Failed to execute swfextract: %s", err))
-		return 1
-	}
-
 	ctx, ctxCancel := context.WithCancel(context.Background())
 	defer ctxCancel()
 
@@ -85,7 +79,7 @@ func (c *recLiveCommand) Run(args []string) int {
 		return 1
 	}
 	if client.AuthToken() == "" {
-		token, err := client.AuthorizeToken(ctx, pngFile)
+		token, err := client.AuthorizeToken(ctx)
 		if err != nil {
 			c.ui.Error(fmt.Sprintf(
 				"Failed to get auth_token: %s", err))
