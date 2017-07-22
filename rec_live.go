@@ -85,7 +85,7 @@ func (c *recLiveCommand) Run(args []string) int {
 		return 1
 	}
 	if client.AuthToken() == "" {
-		token, err := client.AuthorizeToken(ctx, pngFile)
+		token, err := client.AuthorizeToken(ctx)
 		if err != nil {
 			c.ui.Error(fmt.Sprintf(
 				"Failed to get auth_token: %s", err))
