@@ -42,17 +42,3 @@ func getClient(ctx context.Context, areaID string) (*radiko.Client, error) {
 
 	return client, nil
 }
-
-func downloadSwfPlayer() error {
-	_, err := os.Stat(swfPlayer)
-	if !(os.IsExist(err) || os.IsNotExist(err)) {
-		return err
-	}
-
-	if os.IsExist(err) {
-		if err := os.Remove(swfPlayer); err != nil {
-			return err
-		}
-	}
-	return radiko.DownloadPlayer(swfPlayer)
-}

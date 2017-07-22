@@ -13,7 +13,7 @@ type rtmpdump struct {
 	*exec.Cmd
 }
 
-func newRtmpdump(ctx context.Context, streamURL, authToken, duration string) (*rtmpdump, error) {
+func newRtmpdump(ctx context.Context, streamURL, authToken, duration, swfPlayer string) (*rtmpdump, error) {
 	cmdPath, err := exec.LookPath("rtmpdump")
 	if err != nil {
 		return nil, err
