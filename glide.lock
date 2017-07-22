@@ -1,5 +1,5 @@
-hash: 28e0d8fb2a6178937055ada9b5d4f056b1dd0624e34f06efa2239b62d47eb95f
-updated: 2017-07-23T00:34:27.863942507+09:00
+hash: c60286c0e31b91ab034704b8870fd991cfc2669ffa5727239cbc90ced4249f0f
+updated: 2017-07-23T01:37:49.204232556+09:00
 imports:
 - name: github.com/armon/go-radix
   version: 4239b77079c7b5d1243b7b4736304ce8ddb6f0f2
@@ -22,7 +22,7 @@ imports:
 - name: github.com/olekukonko/tablewriter
   version: bdcc175572fd7abece6c831e643891b9331bc9e7
 - name: github.com/yyoshiki41/go-radiko
-  version: 5e8a122ed135d2b1f7733af0ff80b0a4b8c481d6
+  version: 39bcfbea7bb3df9083a4b1661435c91ad0f8d2df
   subpackages:
   - internal/m3u8
   - internal/util
