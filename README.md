@@ -18,7 +18,6 @@ $ go get github.com/yyoshiki41/radigo/cmd/radigo/...
 
 ## Requirements
 
-- swfextract
 - ffmpeg
 - rtmpdump (only if [recording a live streaming radio](#-rec-live))
 
