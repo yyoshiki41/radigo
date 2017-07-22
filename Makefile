@@ -11,14 +11,10 @@ help:
 	@echo "make test          #=> Run unit tests"
 
 init:
-	mkdir -p $(RADIGODIR) && mkdir -p $(RADIGODIR)/output && mkdir -p $(RADIGODIR)/.cache
+	mkdir -p $(RADIGODIR) && mkdir -p $(RADIGODIR)/output
 
-clean: rm-cache
+clean:
 	cd $(RADIGODIR) && ls | grep -v 'output' | xargs rm -r
-
-rm-cache:
-	rm -rf $(RADIGODIR)/.cache/*
-
 
 test:
 	go test $(RADIGOPKG)

@@ -13,6 +13,7 @@ import (
 	"github.com/mitchellh/cli"
 	"github.com/olekukonko/tablewriter"
 	"github.com/yyoshiki41/go-radiko"
+	"github.com/yyoshiki41/radigo/internal"
 )
 
 type recLiveCommand struct {
@@ -51,12 +52,6 @@ func (c *recLiveCommand) Run(args []string) int {
 	spin := spinner.New(spinner.CharSets[9], time.Second)
 	spin.Start()
 	defer spin.Stop()
-
-	if err := downloadSwfPlayer(); err != nil {
-		c.ui.Error(fmt.Sprintf(
-			"Failed to download player.swf: %s", err))
-		return 1
-	}
 
 	ctx, ctxCancel := context.WithCancel(context.Background())
 	defer ctxCancel()
@@ -99,7 +94,17 @@ func (c *recLiveCommand) Run(args []string) int {
 		}
 	}
 
-	rtmpdumpCmd, err := newRtmpdump(ctx, streamURL, client.AuthToken(), duration)
+	tempDir, removeTempDir := internal.CreateTempDir()
+	defer removeTempDir()
+
+	swfPlayer := path.Join(tempDir, "myplayer.swf")
+	if err := radiko.DownloadPlayer(swfPlayer); err != nil {
+		c.ui.Error(fmt.Sprintf(
+			"Failed to download swf player. %s", err))
+		return 1
+	}
+
+	rtmpdumpCmd, err := newRtmpdump(ctx, streamURL, client.AuthToken(), duration, swfPlayer)
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to construct rtmpdump command: %s", err))
