@@ -7,14 +7,14 @@ all: help
 
 help:
 	@echo "make init          #=> Run init scripts"
-	@echo "make clean         #=> Remove cache and downloaded files"
+	@echo "make clean         #=> Remove downloaded files"
 	@echo "make test          #=> Run unit tests"
 
 init:
 	mkdir -p $(RADIGODIR) && mkdir -p $(RADIGODIR)/output
 
 clean:
-	cd $(RADIGODIR) && ls | grep -v 'output' | xargs rm -r
+	rm -rf $(RADIGODIR)/output/*
 
 test:
 	go test $(RADIGOPKG)
