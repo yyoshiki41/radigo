@@ -2,7 +2,6 @@ package radigo
 
 import (
 	"os"
-	"path"
 	"time"
 
 	"github.com/yyoshiki41/go-radiko"
@@ -18,7 +17,6 @@ const (
 
 var (
 	radigoPath = "/tmp/radigo"
-	cachePath  = path.Join(radigoPath, ".cache")
 
 	currentAreaID string
 	location      *time.Location

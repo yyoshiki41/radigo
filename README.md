@@ -123,7 +123,7 @@ If use the [area free](http://radiko.jp/rg/premium/), set the environment variab
 
 #### Cleanup
 
-Remove cache and force refresh.
+Remove output files.
 
 ```bash
 $ make clean
