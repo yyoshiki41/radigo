@@ -21,7 +21,7 @@ type recLiveCommand struct {
 }
 
 func (c *recLiveCommand) Run(args []string) int {
-	var stationID, duration, areaID string
+	var stationID, duration, areaID, outputFilename string
 
 	f := flag.NewFlagSet("rec-live", flag.ContinueOnError)
 	f.StringVar(&stationID, "id", "", "id")
@@ -29,6 +29,8 @@ func (c *recLiveCommand) Run(args []string) int {
 	f.StringVar(&duration, "t", "", "duration")
 	f.StringVar(&areaID, "area", "", "area")
 	f.StringVar(&areaID, "a", "", "area")
+	f.StringVar(&outputFilename, "output", "", "output")
+	f.StringVar(&outputFilename, "o", "", "output")
 	f.Usage = func() { c.ui.Error(c.Help()) }
 	if err := f.Parse(args); err != nil {
 		return 1
@@ -131,10 +133,16 @@ func (c *recLiveCommand) Run(args []string) int {
 		return 1
 	}
 
-	outputFile := path.Join(radigoPath, "output",
-		fmt.Sprintf("%s-%s.mp3",
-			time.Now().In(location).Format(datetimeLayout), stationID,
-		))
+	var outputFile string
+	if outputFilename == "" {
+		outputFile = path.Join(radigoPath, "output",
+			fmt.Sprintf("%s-%s.mp3",
+				time.Now().In(location).Format(datetimeLayout), stationID,
+			))
+	} else {
+		outputFile = path.Join(radigoPath, "output",
+			fmt.Sprintf("%s", outputFilename))
+	}
 
 	err = ffmpegCmd.start(outputFile)
 	if err != nil {
@@ -176,5 +184,6 @@ Options:
   -id=name                 Station id
   -time,t=3600             Time duration (sec)
   -area,a=name             Area id
+  -output,o=filename       Output filename
 `)
 }
