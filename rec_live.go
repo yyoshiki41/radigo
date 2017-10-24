@@ -5,7 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"path"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -99,7 +99,7 @@ func (c *recLiveCommand) Run(args []string) int {
 	tempDir, removeTempDir := internal.CreateTempDir()
 	defer removeTempDir()
 
-	swfPlayer := path.Join(tempDir, "myplayer.swf")
+	swfPlayer := filepath.Join(tempDir, "myplayer.swf")
 	if err := radiko.DownloadPlayer(swfPlayer); err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to download swf player. %s", err))
@@ -135,12 +135,12 @@ func (c *recLiveCommand) Run(args []string) int {
 
 	var outputFile string
 	if outputFilename == "" {
-		outputFile = path.Join(radigoPath, "output",
+		outputFile = filepath.Join(radigoPath, "output",
 			fmt.Sprintf("%s-%s.mp3",
 				time.Now().In(location).Format(datetimeLayout), stationID,
 			))
 	} else {
-		outputFile = path.Join(radigoPath, "output",
+		outputFile = filepath.Join(radigoPath, "output",
 			fmt.Sprintf("%s", outputFilename))
 	}
 

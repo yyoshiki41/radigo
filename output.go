@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"path"
+	"path/filepath"
 
 	"github.com/yyoshiki41/radigo/internal"
 )
@@ -18,7 +18,7 @@ func initTempAACDir() (string, error) {
 		return "", err
 	}
 
-	aacResultFile = path.Join(aacDir, "result.aac")
+	aacResultFile = filepath.Join(aacDir, "result.aac")
 	return aacDir, nil
 }
 

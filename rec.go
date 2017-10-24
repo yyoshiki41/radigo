@@ -5,7 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"path"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -125,7 +125,7 @@ func (c *recCommand) Run(args []string) int {
 		return 1
 	}
 
-	outputFile := path.Join(radigoPath, "output",
+	outputFile := filepath.Join(radigoPath, "output",
 		fmt.Sprintf("%s-%s.%s",
 			startTime.In(location).Format(datetimeLayout), stationID, fileType,
 		))

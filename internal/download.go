@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"path"
+	"path/filepath"
 	"sync"
 )
 
@@ -56,8 +56,8 @@ func download(link, output string) error {
 	}
 	defer resp.Body.Close()
 
-	_, fileName := path.Split(link)
-	file, err := os.Create(path.Join(output, fileName))
+	_, fileName := filepath.Split(link)
+	file, err := os.Create(filepath.Join(output, fileName))
 	if err != nil {
 		return err
 	}
