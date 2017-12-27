@@ -141,6 +141,8 @@ $ make clean
 
 ### `ERROR: Failed to concat aac files`
 
+(caused by the limitation of file descriptors maybe.)
+
 Increase the number of file descriptors.
 
 ```bash
