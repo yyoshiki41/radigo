@@ -137,6 +137,16 @@ Remove output files.
 $ make clean
 ```
 
+## Known Issues
+
+### `ERROR: Failed to concat aac files`
+
+Increase the number of file descriptors.
+
+```bash
+$ ulimit -n 16384
+```
+
 ## Resources
 
 - [Japanese](http://qiita.com/yyoshiki41/items/f81442d7dc2d0ddcf15b)
