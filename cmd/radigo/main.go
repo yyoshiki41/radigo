@@ -5,7 +5,8 @@ import (
 	"os"
 
 	"github.com/mitchellh/cli"
-	"github.com/yyoshiki41/radigo"
+	// "github.com/yyoshiki41/radigo"
+	"github.com/soeyusuke/radigo"
 )
 
 func main() {
