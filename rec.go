@@ -13,8 +13,7 @@ import (
 	"github.com/mitchellh/cli"
 	"github.com/olekukonko/tablewriter"
 	"github.com/yyoshiki41/go-radiko"
-	// "github.com/yyoshiki41/radigo/internal"
-	"github.com/soeyusuke/radigo/internal"
+	"github.com/yyoshiki41/radigo/internal"
 )
 
 type recCommand struct {

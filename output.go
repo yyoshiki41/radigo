@@ -8,8 +8,7 @@ import (
 	"path/filepath"
 	"sync"
 
-	// "github.com/yyoshiki41/radigo/internal"
-	"github.com/soeyusuke/radigo/internal"
+	"github.com/yyoshiki41/radigo/internal"
 )
 
 var aacResultFile string
