@@ -8,7 +8,6 @@ import (
 )
 
 const (
-	version        = "0.4.1"
 	envRardigoHome = "RADIGO_HOME"
 
 	tz             = "Asia/Tokyo"
@@ -41,6 +40,8 @@ func init() {
 		panic(err)
 	}
 }
+
+const version = "v0.4.2"
 
 // Version returns the app version.
 func Version() string {
