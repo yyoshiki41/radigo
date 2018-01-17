@@ -30,3 +30,5 @@ coverage.txt
 profile.out
 # enviroments
 .envrc
+# archives
+archives/*
