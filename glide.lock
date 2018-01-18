@@ -1,10 +1,10 @@
-hash: c60286c0e31b91ab034704b8870fd991cfc2669ffa5727239cbc90ced4249f0f
-updated: 2017-07-23T01:37:49.204232556+09:00
+hash: e563cda47b283fe28f492d62ac581744d82fa78bbbb80b76224246b94dc7df84
+updated: 2018-01-18T16:01:58.798749+09:00
 imports:
 - name: github.com/armon/go-radix
   version: 4239b77079c7b5d1243b7b4736304ce8ddb6f0f2
 - name: github.com/bgentry/speakeasy
-  version: 675b82c74c0ed12283ee81ba8a534c8982c07b85
+  version: 4aabc24848ce5fd31929f7d1e4ea74d3709c14cd
 - name: github.com/briandowns/spinner
   version: cd65e8bd7da20cdcee450f7cbdd9cc04f78bc02f
 - name: github.com/fatih/color
@@ -14,7 +14,7 @@ imports:
 - name: github.com/mattn/go-colorable
   version: d228849504861217f796da67fae4f6e347643f15
 - name: github.com/mattn/go-isatty
-  version: 66b8e73f3f5cda9f96b69efd03dd3d7fc4a5cdb8
+  version: fc9e8d8ef48496124e79ae0df75490096eccf6fe
 - name: github.com/mattn/go-runewidth
   version: 737072b4e32b7a5018b4a7125da8d12de90e8045
 - name: github.com/mitchellh/cli
@@ -22,17 +22,17 @@ imports:
 - name: github.com/olekukonko/tablewriter
   version: bdcc175572fd7abece6c831e643891b9331bc9e7
 - name: github.com/yyoshiki41/go-radiko
-  version: 39bcfbea7bb3df9083a4b1661435c91ad0f8d2df
+  version: bfad684eebc45cf477cb9b7858494c666af8084c
   subpackages:
   - internal/m3u8
   - internal/util
 - name: golang.org/x/net
-  version: 541150ac4f433e755f5663eba5d888c2fa347343
+  version: 513929065c19401a1c7b76ecd942f9f86a0c061b
   subpackages:
   - html
   - html/atom
 - name: golang.org/x/sys
-  version: c200b10b5d5e122be351b67af224adc6128af5bf
+  version: c4489faa6e5ab84c0ef40d6ee878f7a030281f0f
   subpackages:
   - unix
 testImports: []
