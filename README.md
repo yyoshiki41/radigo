@@ -41,7 +41,6 @@ Now downloading..
 Copy the output from a radigo container to the host (your local machine).
 
 ```bash
-e.g.)
 $ docker cp radigo:/tmp/radigo/output/20180114010000-LFR.aac ./
 $ open ./20180114010000-LFR.aac
 ```
@@ -56,6 +55,11 @@ $ go get github.com/yyoshiki41/radigo/cmd/radigo/...
 $ make init
 ```
 
+#### Requirements
+
+- ffmpeg
+- rtmpdump (only if [recording a live streaming radio](#-rec-live))
+
 #### Cleanup
 
 Remove output files.
@@ -63,11 +67,6 @@ Remove output files.
 ```bash
 $ make clean
 ```
-
-#### Requirements
-
-- ffmpeg
-- rtmpdump (only if [recording a live streaming radio](#-rec-live))
 
 ## Usage
 

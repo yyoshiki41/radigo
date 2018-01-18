@@ -11,7 +11,7 @@ help:
 	@echo "make test          #=> Run unit tests"
 
 init:
-	mkdir -p $(RADIGODIR) && mkdir -p $(RADIGODIR)/output
+	mkdir -p $(RADIGODIR)/output
 
 clean:
 	rm -rf $(RADIGODIR)/output/*
