@@ -3,30 +3,71 @@
 Record the [radiko.jp](http://radiko.jp/) program.
 
 [![godoc](https://godoc.org/github.com/yyoshiki41/radigo?status.svg)](https://godoc.org/github.com/yyoshiki41/radigo)
-[![CircleCI](https://circleci.com/gh/yyoshiki41/radigo.svg?style=svg)](https://circleci.com/gh/yyoshiki41/radigo)
 [![go report](https://goreportcard.com/badge/github.com/yyoshiki41/radigo)](https://goreportcard.com/report/github.com/yyoshiki41/radigo)
+[![CircleCI](https://circleci.com/gh/yyoshiki41/radigo.svg?style=svg)](https://circleci.com/gh/yyoshiki41/radigo)
+
+[![Docker Stars](https://img.shields.io/docker/stars/yyoshiki41/radigo.svg)](https://hub.docker.com/r/yyoshiki41/radigo/)
+[![Docker Build Status](https://img.shields.io/docker/build/yyoshiki41/radigo.svg)](https://hub.docker.com/r/yyoshiki41/radigo/tags/)
+[![Docker Automated build](https://img.shields.io/docker/automated/yyoshiki41/radigo.svg)](https://hub.docker.com/r/yyoshiki41/radigo/builds/)
 
 _Please refrain from using beyond the range of personal listening._ </br>
-__個人的な視聴の目的以外で利用しないでください.__
+__個人での視聴の目的以外で利用しないでください.__
 
 ## Installation
+
+### Docker images
+
+```bash
+$ docker pull yyoshiki41/radigo
+```
+
+You can launch a radigo container and exec `radigo` command.
+
+```bash
+$ docker run --name radigo -itd radigo
+$ docker attach radigo
+root@158057ab4c2a:/tmp$ radigo rec -id=LFR -s=20180114010000
+Now downloading..
+/
++------------+----------------------------------+
+| STATION ID |              TITLE               |
++------------+----------------------------------+
+| LFR        | オードリーのオールナイトニッポン |
++------------+----------------------------------+
+| Completed!
+/tmp/radigo/output/20180114010000-LFR.aac
+```
+
+Copy the output from a radigo container to the host (your local machine).
+
+```bash
+e.g.)
+$ docker cp radigo:/tmp/radigo/output/20180114010000-LFR.aac ./
+$ open ./20180114010000-LFR.aac
+```
+
+### Building from source
 
 ・Go 1.7 or newer
 
 ```bash
 $ go get github.com/yyoshiki41/radigo/cmd/radigo/...
+# Configuration
+$ make init
 ```
 
-## Requirements
+#### Cleanup
+
+Remove output files.
+
+```bash
+$ make clean
+```
+
+#### Requirements
 
 - ffmpeg
 - rtmpdump (only if [recording a live streaming radio](#-rec-live))
-
-## Configuration
-
-```bash
-$ make init
-```
 
 ## Usage
 
@@ -129,14 +170,6 @@ If use the [area free](http://radiko.jp/rg/premium/), set the environment variab
 
 - `RADIKO_MAIL`
 - `RADIKO_PASSWORD`
-
-#### Cleanup
-
-Remove output files.
-
-```bash
-$ make clean
-```
 
 ## Known Issues
 
