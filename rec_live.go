@@ -133,17 +133,14 @@ func (c *recLiveCommand) Run(args []string) int {
 		return 1
 	}
 
-	var outputFile string
 	if outputFilename == "" {
-		outputFile = filepath.Join(radigoPath, "output",
-			fmt.Sprintf("%s-%s.mp3",
-				time.Now().In(location).Format(datetimeLayout), stationID,
-			))
-	} else {
-		outputFile = filepath.Join(radigoPath, "output",
-			fmt.Sprintf("%s", outputFilename))
+		outputFilename = fmt.Sprintf("%s-%s.mp3",
+			time.Now().In(location).Format(datetimeLayout), stationID)
+	} else if filepath.Ext(outputFilename) != ".mp3" {
+		outputFilename = fmt.Sprintf("%s.mp3", outputFilename)
 	}
 
+	outputFile := filepath.Join(radigoPath, "output", outputFilename)
 	err = ffmpegCmd.start(outputFile)
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
@@ -184,6 +181,6 @@ Options:
   -id=name                 Station id
   -time,t=3600             Time duration (sec)
   -area,a=name             Area id
-  -output,o=filename       Output filename
+  -output,o=filename       Output filename (mp3)
 `)
 }
