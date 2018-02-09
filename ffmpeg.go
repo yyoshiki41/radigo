@@ -9,7 +9,7 @@ type ffmpeg struct {
 	*exec.Cmd
 }
 
-func newFfmpeg(ctx context.Context, input string) (*ffmpeg, error) {
+func newFfmpeg(ctx context.Context) (*ffmpeg, error) {
 	cmdPath, err := exec.LookPath("ffmpeg")
 	if err != nil {
 		return nil, err
@@ -18,12 +18,15 @@ func newFfmpeg(ctx context.Context, input string) (*ffmpeg, error) {
 	return &ffmpeg{exec.CommandContext(
 		ctx,
 		cmdPath,
-		"-f", "concat", "-safe", "0", "-i", input,
 	)}, nil
 }
 
 func (f *ffmpeg) setDir(dir string) {
 	f.Dir = dir
+}
+
+func (f *ffmpeg) setInput(input string) {
+	f.setArgs("-i", input)
 }
 
 func (f *ffmpeg) setArgs(args ...string) {
