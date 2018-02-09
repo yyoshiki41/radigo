@@ -25,20 +25,20 @@ func (f *ffmpeg) setDir(dir string) {
 	f.Dir = dir
 }
 
-func (f *ffmpeg) setInput(input string) {
-	f.setArgs("-i", input)
-}
-
 func (f *ffmpeg) setArgs(args ...string) {
 	f.Args = append(f.Args, args...)
 }
 
+func (f *ffmpeg) setInput(input string) {
+	f.setArgs("-i", input)
+}
+
 func (f *ffmpeg) run(output string) error {
-	f.Args = append(f.Args, output)
+	f.setArgs(output)
 	return f.Run()
 }
 
 func (f *ffmpeg) start(output string) error {
-	f.Args = append(f.Args, output)
+	f.setArgs(output)
 	return f.Start()
 }
