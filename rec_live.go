@@ -113,12 +113,13 @@ func (c *recLiveCommand) Run(args []string) int {
 		return 1
 	}
 
-	ffmpegCmd, err := newFfmpeg(ctx, "-")
+	ffmpegCmd, err := newFfmpeg(ctx)
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to construct ffmpeg command: %s", err))
 		return 1
 	}
+	ffmpegCmd.setInput("-")
 	ffmpegCmd.setArgs(
 		"-vn",
 		"-acodec", "libmp3lame",

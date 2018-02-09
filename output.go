@@ -39,12 +39,17 @@ func createConcatedAACFile(ctx context.Context, aacDir string) error {
 		}
 	}
 
-	f, err := newFfmpeg(ctx, tfile.Name())
+	f, err := newFfmpeg(ctx)
 	if err != nil {
 		return err
 	}
 
 	f.setDir(aacDir)
+	f.setArgs(
+		"-f", "concat",
+		"-safe", "0",
+	)
+	f.setInput(tfile.Name())
 	f.setArgs("-c", "copy")
 	// TODO: Run 結果の標準出力を拾う
 	return f.run(aacResultFile)
@@ -68,12 +73,13 @@ func outputAAC(outputFile string) error {
 }
 
 func outputMP3(ctx context.Context, outputFile string) error {
-	f, err := newFfmpeg(ctx, aacResultFile)
+	f, err := newFfmpeg(ctx)
 	if err != nil {
 		return err
 	}
 
 	f.setDir(radigoPath)
+	f.setInput(aacResultFile)
 	f.setArgs(
 		"-c:a", "libmp3lame",
 		"-ac", "2",
