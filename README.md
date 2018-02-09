@@ -24,7 +24,7 @@ $ docker pull yyoshiki41/radigo
 You can launch a radigo container and exec `radigo` command.
 
 ```bash
-$ docker run --name radigo -itd radigo
+$ docker run --name radigo -itd yyoshiki41/radigo
 $ docker attach radigo
 root@158057ab4c2a:/tmp$ radigo rec -id=LFR -s=20180114010000
 Now downloading..
