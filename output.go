@@ -6,8 +6,6 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
-
-	"github.com/yyoshiki41/radigo/internal"
 )
 
 var aacResultFile string
@@ -23,12 +21,25 @@ func initTempAACDir() (string, error) {
 }
 
 func createConcatedAACFile(ctx context.Context, aacDir string) error {
-	name, err := internal.ConcatFileNames(aacDir)
+	files, err := ioutil.ReadDir(aacDir)
 	if err != nil {
 		return err
 	}
 
-	f, err := newFfmpeg(ctx, fmt.Sprintf("concat:%s", name))
+	tfile, err := ioutil.TempFile(aacDir, "aac")
+	if err != nil {
+		return err
+	}
+	defer os.Remove(tfile.Name())
+
+	for _, f := range files {
+		path := fmt.Sprintf("file '%s'\n", filepath.Join(aacDir, f.Name()))
+		if _, err := tfile.WriteString(path); err != nil {
+			return err
+		}
+	}
+
+	f, err := newFfmpeg(ctx, tfile.Name())
 	if err != nil {
 		return err
 	}

@@ -18,7 +18,7 @@ func newFfmpeg(ctx context.Context, input string) (*ffmpeg, error) {
 	return &ffmpeg{exec.CommandContext(
 		ctx,
 		cmdPath,
-		"-i", input,
+		"-f", "concat", "-safe", "0", "-i", input,
 	)}, nil
 }
 
