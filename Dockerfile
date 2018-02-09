@@ -2,7 +2,7 @@ FROM yyoshiki41/ubuntu-ffmpeg-v3.3
 
 LABEL maintainer="yyoshiki41@gmail.com"
 
-ENV VERSION "v0.5.0"
+ENV VERSION "v0.5.1"
 
 RUN apt update
 RUN apt install -y tzdata wget unzip
