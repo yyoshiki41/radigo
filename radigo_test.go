@@ -4,6 +4,6 @@ import "testing"
 
 func TestVersion(t *testing.T) {
 	if Version() == "" {
-		t.Error("Version is empty: %s", version)
+		t.Errorf("Version is empty: %s", version)
 	}
 }
