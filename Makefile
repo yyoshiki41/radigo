@@ -25,6 +25,3 @@ test-cover:
 		go test -coverprofile=profile.out -covermode=atomic $$d || exit 1; \
 		[ -f profile.out ] && cat profile.out >> coverage.txt && rm profile.out || true; \
 	done
-
-echo:
-	@echo "$(HOGE)"

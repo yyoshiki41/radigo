@@ -4,6 +4,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -140,8 +141,14 @@ func (c *recLiveCommand) Run(args []string) int {
 	} else if filepath.Ext(outputFilename) != ".mp3" {
 		outputFilename = fmt.Sprintf("%s.mp3", outputFilename)
 	}
-
 	outputFile := filepath.Join(radigoPath, "output", outputFilename)
+
+	ffmpegStdout, err := ffmpegCmd.StderrPipe()
+	if err != nil {
+		c.ui.Error(fmt.Sprintf(
+			"Failed to start ffmpeg command: %s", err))
+	}
+
 	err = ffmpegCmd.start(outputFile)
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
@@ -157,6 +164,14 @@ func (c *recLiveCommand) Run(args []string) int {
 				"Failed to execute rtmpdump command: %s", err))
 		}
 	}()
+
+	b, err := ioutil.ReadAll(ffmpegStdout)
+	if err != nil {
+		c.ui.Error(fmt.Sprintf(
+			"Failed to read ffmpeg Stdout: %s", err))
+	} else {
+		c.ui.Info(fmt.Sprintf("ffmpeg Stdout: %s", string(b)))
+	}
 
 	err = ffmpegCmd.Wait()
 	if err != nil {
