@@ -19,7 +19,6 @@ jobs:
 
       # Install github.com/Masterminds/glide
       - run: curl https://glide.sh/get | sh
-      - restore_cache:
       - run:
           name: Vendoring
           command: glide i
