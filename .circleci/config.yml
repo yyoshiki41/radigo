@@ -3,11 +3,8 @@ jobs:
   build:
     docker:
       - image: circleci/golang:1.10
-        environment:
-          POSTGRES_USER: circleci-demo-go
-          POSTGRES_DB: circle_test
 
-    working_directory: "/go/src/github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}"
+    working_directory: /go/src/github.com/yyoshiki41/radigo
 
     steps:
       - checkout
