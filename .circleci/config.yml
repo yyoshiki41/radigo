@@ -12,10 +12,12 @@ jobs:
       - restore_cache:
           keys:
             - v1-pkg-cache
-            - glide-{{ .Branch }}-{{ checksum "glide.lock" }}
 
       # Install github.com/Masterminds/glide
       - run: curl https://glide.sh/get | sh
+      - restore_cache:
+          keys:
+            - glide-{{ .Branch }}-{{ checksum "glide.lock" }}
       - run:
           name: Vendoring
           command: glide i
