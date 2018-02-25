@@ -1,0 +1,46 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/golang:1.10
+        environment:
+          POSTGRES_USER: circleci-demo-go
+          POSTGRES_DB: circle_test
+
+    working_directory: "/go/src/github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}"
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - v1-pkg-cache
+            - glide-{{ .Branch }}-{{ checksum "glide.lock" }}
+
+      # Install github.com/Masterminds/glide
+      - run: curl https://glide.sh/get | sh
+      - restore_cache:
+      - run:
+          name: Vendoring
+          command: glide i
+      - save_cache:
+          key: glide-{{ .Branch }}-{{ checksum "glide.lock" }}
+          paths:
+            - "vendor"
+
+      - run:
+          name: Run init command
+          command: make init
+
+      - run:
+          name: Run unit tests
+          command: make test-cover
+
+      - run:
+          name: Report test coverage
+          command: bash <(curl -s https://codecov.io/bash)
+
+      - save_cache:
+          key: v1-pkg-cache
+          paths:
+            - "/go/pkg"
