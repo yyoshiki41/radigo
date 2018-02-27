@@ -2,7 +2,7 @@ FROM yyoshiki41/ubuntu-ffmpeg-v3.3
 
 LABEL maintainer="yyoshiki41@gmail.com"
 
-ARG VERSION="v0.5.2"
+ARG VERSION="v0.6.0"
 
 RUN apt update
 RUN apt install -y tzdata unzip rtmpdump
