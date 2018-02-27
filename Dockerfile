@@ -2,10 +2,10 @@ FROM yyoshiki41/ubuntu-ffmpeg-v3.3
 
 LABEL maintainer="yyoshiki41@gmail.com"
 
-ENV VERSION "v0.5.2"
+ARG VERSION="v0.5.2"
 
 RUN apt update
-RUN apt install -y tzdata wget unzip
+RUN apt install -y tzdata unzip rtmpdump
 
 # set timezone
 ENV TZ "Asia/Tokyo"
