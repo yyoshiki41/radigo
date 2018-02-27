@@ -4,6 +4,8 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"io"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -22,6 +24,7 @@ type recLiveCommand struct {
 
 func (c *recLiveCommand) Run(args []string) int {
 	var stationID, duration, areaID, outputFilename string
+	var verbose bool
 
 	f := flag.NewFlagSet("rec-live", flag.ContinueOnError)
 	f.StringVar(&stationID, "id", "", "id")
@@ -31,6 +34,8 @@ func (c *recLiveCommand) Run(args []string) int {
 	f.StringVar(&areaID, "a", "", "area")
 	f.StringVar(&outputFilename, "output", "", "output")
 	f.StringVar(&outputFilename, "o", "", "output")
+	f.BoolVar(&verbose, "verbose", false, "verbose")
+	f.BoolVar(&verbose, "v", false, "verbose")
 	f.Usage = func() { c.ui.Error(c.Help()) }
 	if err := f.Parse(args); err != nil {
 		return 1
@@ -44,6 +49,14 @@ func (c *recLiveCommand) Run(args []string) int {
 		c.ui.Error("Duration is empty.")
 		return 1
 	}
+
+	if outputFilename == "" {
+		outputFilename = fmt.Sprintf("%s-%s.mp3",
+			time.Now().In(location).Format(datetimeLayout), stationID)
+	} else if filepath.Ext(outputFilename) != ".mp3" {
+		outputFilename = fmt.Sprintf("%s.mp3", outputFilename)
+	}
+	outputFile := filepath.Join(radigoPath, "output", outputFilename)
 
 	c.ui.Output("Now downloading.. ")
 	table := tablewriter.NewWriter(os.Stdout)
@@ -113,6 +126,12 @@ func (c *recLiveCommand) Run(args []string) int {
 		return 1
 	}
 
+	rtmpdumpStdout, err := rtmpdumpCmd.StdoutPipe()
+	if err != nil {
+		c.ui.Error(fmt.Sprintf("%v", err))
+		return 1
+	}
+
 	ffmpegCmd, err := newFfmpeg(ctx)
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
@@ -127,29 +146,40 @@ func (c *recLiveCommand) Run(args []string) int {
 		"-ab", "64k",
 		"-ac", "2",
 	)
+	// For debugging mode
+	ffmpegStderr, err := ffmpegCmd.stderrPipe()
+	if err != nil {
+		c.ui.Warn(fmt.Sprintf("%v", err))
+	}
 
-	ffmpegCmd.Stdin, err = rtmpdumpCmd.StdoutPipe()
+	// need to close
+	ffmpegStdin, err := ffmpegCmd.stdinPipe()
 	if err != nil {
 		c.ui.Error(fmt.Sprintf("%v", err))
 		return 1
 	}
 
-	if outputFilename == "" {
-		outputFilename = fmt.Sprintf("%s-%s.mp3",
-			time.Now().In(location).Format(datetimeLayout), stationID)
-	} else if filepath.Ext(outputFilename) != ".mp3" {
-		outputFilename = fmt.Sprintf("%s.mp3", outputFilename)
-	}
-
-	outputFile := filepath.Join(radigoPath, "output", outputFilename)
 	err = ffmpegCmd.start(outputFile)
 	if err != nil {
+		ffmpegStdin.Close()
+
 		c.ui.Error(fmt.Sprintf(
 			"Failed to start ffmpeg command: %s", err))
 		return 1
 	}
 
 	go func() {
+		// Block until catch EOF in rtmpdumpStdout
+		_, err := io.Copy(ffmpegStdin, rtmpdumpStdout)
+		if err != nil {
+			ctxCancel()
+			c.ui.Error(fmt.Sprintf("%v", err))
+		}
+	}()
+
+	go func() {
+		defer ffmpegStdin.Close()
+
 		err := rtmpdumpCmd.Run()
 		if err != nil {
 			ctxCancel()
@@ -158,7 +188,17 @@ func (c *recLiveCommand) Run(args []string) int {
 		}
 	}()
 
-	err = ffmpegCmd.Wait()
+	if verbose {
+		b, err := ioutil.ReadAll(ffmpegStderr)
+		if err != nil {
+			c.ui.Warn(fmt.Sprintf(
+				"Failed to read ffmpeg Stderr: %s", err))
+		} else {
+			c.ui.Info(fmt.Sprintf("ffmpeg Stderr: %s", b))
+		}
+	}
+
+	err = ffmpegCmd.wait()
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to execute ffmpeg command: %s", err))
@@ -183,5 +223,6 @@ Options:
   -time,t=3600             Time duration (sec)
   -area,a=name             Area id
   -output,o=filename       Output filename (mp3)
+  -verbose,v               Verbose mode
 `)
 }

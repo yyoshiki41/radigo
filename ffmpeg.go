@@ -2,6 +2,7 @@ package radigo
 
 import (
 	"context"
+	"io"
 	"os/exec"
 )
 
@@ -41,4 +42,16 @@ func (f *ffmpeg) run(output string) error {
 func (f *ffmpeg) start(output string) error {
 	f.setArgs(output)
 	return f.Start()
+}
+
+func (f *ffmpeg) wait() error {
+	return f.Wait()
+}
+
+func (f *ffmpeg) stdinPipe() (io.WriteCloser, error) {
+	return f.StdinPipe()
+}
+
+func (f *ffmpeg) stderrPipe() (io.ReadCloser, error) {
+	return f.StderrPipe()
 }
