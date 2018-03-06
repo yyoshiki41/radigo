@@ -15,7 +15,7 @@ const (
 )
 
 var (
-	radigoPath = "/tmp/radigo"
+	outputDir = "output"
 
 	currentAreaID string
 	location      *time.Location
@@ -27,7 +27,7 @@ func init() {
 	// If the environment variable RADIGO_HOME is set,
 	// override working directory path.
 	if e := os.Getenv(envRardigoHome); e != "" {
-		radigoPath = e
+		outputDir = e
 	}
 
 	currentAreaID, err = radiko.AreaID()

@@ -11,7 +11,7 @@ import (
 var aacResultFile string
 
 func initTempAACDir() (string, error) {
-	aacDir, err := ioutil.TempDir(radigoPath, "aac")
+	aacDir, err := ioutil.TempDir(outputDir, "aac")
 	if err != nil {
 		return "", err
 	}
@@ -78,7 +78,7 @@ func outputMP3(ctx context.Context, outputFile string) error {
 		return err
 	}
 
-	f.setDir(radigoPath)
+	f.setDir(outputDir)
 	f.setInput(aacResultFile)
 	f.setArgs(
 		"-c:a", "libmp3lame",

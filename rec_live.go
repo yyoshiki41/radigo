@@ -56,7 +56,7 @@ func (c *recLiveCommand) Run(args []string) int {
 	} else if filepath.Ext(outputFilename) != ".mp3" {
 		outputFilename = fmt.Sprintf("%s.mp3", outputFilename)
 	}
-	outputFile := filepath.Join(radigoPath, "output", outputFilename)
+	outputFile := filepath.Join(outputDir, "output", outputFilename)
 
 	c.ui.Output("Now downloading.. ")
 	table := tablewriter.NewWriter(os.Stdout)
