@@ -55,3 +55,38 @@ func (f *ffmpeg) stdinPipe() (io.WriteCloser, error) {
 func (f *ffmpeg) stderrPipe() (io.ReadCloser, error) {
 	return f.StderrPipe()
 }
+
+// ConvertAACtoMP3 converts an aac file to a mp3 file.
+func ConvertAACtoMP3(ctx context.Context, input, output string) error {
+	f, err := newFfmpeg(ctx)
+	if err != nil {
+		return err
+	}
+
+	f.setInput(input)
+	f.setArgs(
+		"-c:a", "libmp3lame",
+		"-ac", "2",
+		"-q:a", "2",
+		"-y", // overwrite the output file without asking
+	)
+	// TODO: Collect log
+	return f.run(output)
+}
+
+// ConcatAACFilesFromList converts an aac file to a mp3 file.
+func ConcatAACFilesFromList(ctx context.Context, input, output string) error {
+	f, err := newFfmpeg(ctx)
+	if err != nil {
+		return err
+	}
+
+	f.setArgs(
+		"-f", "concat",
+		"-safe", "0",
+	)
+	f.setInput(input)
+	f.setArgs("-c", "copy")
+	// TODO: Collect log
+	return f.run(output)
+}

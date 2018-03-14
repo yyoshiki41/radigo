@@ -5,7 +5,6 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"path/filepath"
 	"strings"
 	"time"
 
@@ -29,8 +28,8 @@ func (c *recCommand) Run(args []string) int {
 	f.StringVar(&start, "s", "", "start")
 	f.StringVar(&areaID, "area", "", "area")
 	f.StringVar(&areaID, "a", "", "area")
-	f.StringVar(&fileType, "output", "", "output")
-	f.StringVar(&fileType, "o", "", "output")
+	f.StringVar(&fileType, "output", AudioFormatAAC, "output")
+	f.StringVar(&fileType, "o", AudioFormatAAC, "output")
 	f.Usage = func() { c.ui.Error(c.Help()) }
 	if err := f.Parse(args); err != nil {
 		return 1
@@ -43,15 +42,26 @@ func (c *recCommand) Run(args []string) int {
 	startTime, err := time.ParseInLocation(datetimeLayout, start, location)
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
-			"Invalid start time format: %s", start))
+			"Invalid start time format '': %s", start, err))
 		return 1
 	}
-	if fileType == "" {
-		fileType = "aac"
-	}
-	if fileType != "mp3" && fileType != "aac" {
+	if fileType != AudioFormatAAC && fileType != AudioFormatMP3 {
 		c.ui.Error(fmt.Sprintf(
-			"Unsupported file type: %s", fileType))
+			"Unsupported audio format: %s", fileType))
+		return 1
+	}
+
+	output, err := NewOutputConfig(
+		fmt.Sprintf("%s-%s", startTime.In(location).Format(datetimeLayout), stationID),
+		fileType)
+	if err != nil {
+		c.ui.Error(fmt.Sprintf(
+			"Failed to configure output: %s", err))
+		return 1
+	}
+	if err := output.SetupDir(); err != nil {
+		c.ui.Error(fmt.Sprintf(
+			"Failed to setup the output dir: %s", err))
 		return 1
 	}
 
@@ -106,38 +116,41 @@ func (c *recCommand) Run(args []string) int {
 		return 1
 	}
 
-	aacDir, err := initTempAACDir()
+	aacDir, err := output.TempAACDir()
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to create the aac dir: %s", err))
 		return 1
 	}
-	defer os.RemoveAll(aacDir)
+	defer os.RemoveAll(aacDir) // clean up
 
 	if err := internal.BulkDownload(chunklist, aacDir); err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to download aac files: %s", err))
 		return 1
 	}
-	if err := createConcatedAACFile(ctx, aacDir); err != nil {
+
+	concatedFile, err := concatAACFiles(ctx, aacDir)
+	if err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to concat aac files: %s", err))
 		return 1
 	}
 
-	outputFile := filepath.Join(outputDir, "output",
-		fmt.Sprintf("%s-%s.%s",
-			startTime.In(location).Format(datetimeLayout), stationID, fileType,
-		))
-
-	if err := output(ctx, fileType, outputFile); err != nil {
+	var retErr error
+	switch output.AudioFormat() {
+	case AudioFormatAAC:
+		retErr = os.Rename(concatedFile, output.AbsPath())
+	case AudioFormatMP3:
+		retErr = ConvertAACtoMP3(ctx, concatedFile, output.AbsPath())
+	}
+	if retErr != nil {
 		c.ui.Error(fmt.Sprintf(
-			"Failed to output a result file: %s", err))
+			"Failed to output a result file: %s", retErr))
 		return 1
 	}
 
-	c.ui.Output(fmt.Sprintf("Completed!\n%s", outputFile))
-
+	c.ui.Output(fmt.Sprintf("Completed!\n%s", output.AbsPath()))
 	return 0
 }
 
@@ -152,7 +165,7 @@ Usage: radigo rec [options]
 Options:
   -id=name                 Station id
   -start,s=201610101000    Start time
-  -output,o=mp3            Output file type (mp3, aac)
   -area,a=name             Area id
+  -output,o=mp3            Output file type (mp3, aac)
 `)
 }

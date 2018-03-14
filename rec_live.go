@@ -50,13 +50,15 @@ func (c *recLiveCommand) Run(args []string) int {
 		return 1
 	}
 
+	// TODO:
 	if outputFilename == "" {
 		outputFilename = fmt.Sprintf("%s-%s.mp3",
 			time.Now().In(location).Format(datetimeLayout), stationID)
 	} else if filepath.Ext(outputFilename) != ".mp3" {
 		outputFilename = fmt.Sprintf("%s.mp3", outputFilename)
 	}
-	outputFile := filepath.Join(outputDir, "output", outputFilename)
+	// outputFile := filepath.Join(outputDirPath, "output", outputFilename)
+	outputFile := filepath.Join("", "output", outputFilename)
 
 	c.ui.Output("Now downloading.. ")
 	table := tablewriter.NewWriter(os.Stdout)
