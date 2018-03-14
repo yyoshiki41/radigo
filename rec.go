@@ -42,7 +42,7 @@ func (c *recCommand) Run(args []string) int {
 	startTime, err := time.ParseInLocation(datetimeLayout, start, location)
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
-			"Invalid start time format '': %s", start, err))
+			"Invalid start time format '%s': %s", start, err))
 		return 1
 	}
 	if fileType != AudioFormatAAC && fileType != AudioFormatMP3 {
