@@ -50,13 +50,26 @@ func (c *recLiveCommand) Run(args []string) int {
 		return 1
 	}
 
+	var baseName string
 	if outputFilename == "" {
-		outputFilename = fmt.Sprintf("%s-%s.mp3",
+		baseName = fmt.Sprintf("%s-%s",
 			time.Now().In(location).Format(datetimeLayout), stationID)
-	} else if filepath.Ext(outputFilename) != ".mp3" {
-		outputFilename = fmt.Sprintf("%s.mp3", outputFilename)
+	} else {
+		baseName = strings.TrimSuffix(outputFilename,
+			fmt.Sprintf(".%s", AudioFormatMP3))
 	}
-	outputFile := filepath.Join(radigoPath, "output", outputFilename)
+
+	output, err := NewOutputConfig(baseName, AudioFormatMP3)
+	if err != nil {
+		c.ui.Error(fmt.Sprintf(
+			"Failed to configure output: %s", err))
+		return 1
+	}
+	if err := output.SetupDir(); err != nil {
+		c.ui.Error(fmt.Sprintf(
+			"Failed to setup the output dir: %s", err))
+		return 1
+	}
 
 	c.ui.Output("Now downloading.. ")
 	table := tablewriter.NewWriter(os.Stdout)
@@ -159,7 +172,7 @@ func (c *recLiveCommand) Run(args []string) int {
 		return 1
 	}
 
-	err = ffmpegCmd.start(outputFile)
+	err = ffmpegCmd.start(output.AbsPath())
 	if err != nil {
 		ffmpegStdin.Close()
 
@@ -205,7 +218,7 @@ func (c *recLiveCommand) Run(args []string) int {
 		return 1
 	}
 
-	c.ui.Output(fmt.Sprintf("Completed!\n%s", outputFile))
+	c.ui.Output(fmt.Sprintf("Completed!\n%s", output.AbsPath()))
 
 	return 0
 }

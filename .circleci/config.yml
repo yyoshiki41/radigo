@@ -27,10 +27,6 @@ jobs:
             - "vendor"
 
       - run:
-          name: Run init command
-          command: make init
-
-      - run:
           name: Run unit tests
           command: make test-cover
 

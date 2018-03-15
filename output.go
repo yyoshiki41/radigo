@@ -1,91 +1,82 @@
 package radigo
 
 import (
-	"context"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 )
 
-var aacResultFile string
+const (
+	defaultOutputDir = "output"
+	envRadigoHome    = "RADIGO_HOME"
+)
 
-func initTempAACDir() (string, error) {
-	aacDir, err := ioutil.TempDir(radigoPath, "aac")
-	if err != nil {
-		return "", err
-	}
-
-	aacResultFile = filepath.Join(aacDir, "result.aac")
-	return aacDir, nil
+// OutputConfig contains the configuration for output files.
+type OutputConfig struct {
+	DirFullPath  string
+	FileBaseName string // base name of the file
+	FileFormat   string // aac, mp3
 }
 
-func createConcatedAACFile(ctx context.Context, aacDir string) error {
-	files, err := ioutil.ReadDir(aacDir)
-	if err != nil {
-		return err
+func NewOutputConfig(fileBaseName, fileFormat string) (*OutputConfig, error) {
+	// If the environment variable RADIGO_HOME is set,
+	// override working directory path.
+	fullPath := os.Getenv(envRadigoHome)
+	switch {
+	case fullPath != "" && !filepath.IsAbs(fullPath):
+		wd, err := os.Getwd()
+		if err != nil {
+			return nil, err
+		}
+		fullPath = filepath.Join(wd, fullPath)
+	case fullPath == "":
+		wd, err := os.Getwd()
+		if err != nil {
+			return nil, err
+		}
+		fullPath = filepath.Join(wd, defaultOutputDir)
+	default:
 	}
 
-	tfile, err := ioutil.TempFile(aacDir, "aac")
-	if err != nil {
-		return err
-	}
-	defer os.Remove(tfile.Name())
+	return &OutputConfig{
+		DirFullPath:  filepath.Clean(fullPath),
+		FileBaseName: fileBaseName,
+		FileFormat:   fileFormat,
+	}, nil
+}
 
-	for _, f := range files {
-		path := fmt.Sprintf("file '%s'\n", filepath.Join(aacDir, f.Name()))
-		if _, err := tfile.WriteString(path); err != nil {
+// SetupDir configures the output directory or returns an error if failed to create it.
+func (c *OutputConfig) SetupDir() error {
+	_, err := os.Stat(c.DirFullPath)
+	switch {
+	case err == nil:
+		// Output directory already exists.
+	case os.IsNotExist(err):
+		// Output directory does not exist.
+		if err := os.MkdirAll(c.DirFullPath, 0755); err != nil {
 			return err
 		}
-	}
-
-	f, err := newFfmpeg(ctx)
-	if err != nil {
-		return err
-	}
-
-	f.setDir(aacDir)
-	f.setArgs(
-		"-f", "concat",
-		"-safe", "0",
-	)
-	f.setInput(tfile.Name())
-	f.setArgs("-c", "copy")
-	// TODO: Run 結果の標準出力を拾う
-	return f.run(aacResultFile)
-}
-
-func output(ctx context.Context, fileType, outputFile string) error {
-	switch fileType {
-	case "mp3":
-		return outputMP3(ctx, outputFile)
-	case "aac":
-		return outputAAC(outputFile)
-	}
-	return fmt.Errorf("Unsupported file type: %s", fileType)
-}
-
-func outputAAC(outputFile string) error {
-	if err := os.Rename(aacResultFile, outputFile); err != nil {
+	default:
 		return err
 	}
 	return nil
 }
 
-func outputMP3(ctx context.Context, outputFile string) error {
-	f, err := newFfmpeg(ctx)
+func (c *OutputConfig) TempAACDir() (string, error) {
+	aacDir, err := ioutil.TempDir(c.DirFullPath, "aac")
 	if err != nil {
-		return err
+		return "", err
 	}
 
-	f.setDir(radigoPath)
-	f.setInput(aacResultFile)
-	f.setArgs(
-		"-c:a", "libmp3lame",
-		"-ac", "2",
-		"-q:a", "2",
-		"-y", // overwrite the output file without asking
-	)
-	// TODO: Run 結果の標準出力を拾う
-	return f.run(outputFile)
+	return aacDir, nil
+}
+
+func (c *OutputConfig) AudioFormat() string {
+	return c.FileFormat
+}
+
+func (c *OutputConfig) AbsPath() string {
+	name := fmt.Sprintf("%s.%s", c.FileBaseName, c.FileFormat)
+	return filepath.Join(c.DirFullPath, name)
 }

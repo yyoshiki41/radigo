@@ -23,6 +23,9 @@ _testmain.go
 *.test
 *.prof
 
+# output
+output/*
+
 # vendor
 vendor/*
 # coverage

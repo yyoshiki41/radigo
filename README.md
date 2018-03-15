@@ -35,13 +35,13 @@ Now downloading..
 | LFR        | オードリーのオールナイトニッポン |
 +------------+----------------------------------+
 | Completed!
-/tmp/radigo/output/20180114010000-LFR.aac
+/tmp/output/20180114010000-LFR.aac
 ```
 
 Copy the output from a radigo container to the host (your local machine).
 
 ```bash
-$ docker cp radigo:/tmp/radigo/output/20180114010000-LFR.aac ./
+$ docker cp radigo:/tmp/output/20180114010000-LFR.aac ./
 $ open ./20180114010000-LFR.aac
 ```
 
@@ -51,22 +51,12 @@ $ open ./20180114010000-LFR.aac
 
 ```bash
 $ go get github.com/yyoshiki41/radigo/cmd/radigo/...
-# Configuration
-$ make init
 ```
 
 #### Requirements
 
 - ffmpeg
 - rtmpdump (only if [recording a live streaming radio](#-rec-live))
-
-#### Cleanup
-
-Remove output files.
-
-```bash
-$ make clean
-```
 
 ## Usage
 
@@ -122,7 +112,7 @@ Now downloading..
 | LFR        |　　  オードリーのオールナイトニッポン |
 +------------+---------------------------------+
 Completed!
-/tmp/radigo/output/20161126010000-LFR.mp3
+/tmp/output/20161126010000-LFR.mp3
 ```
 
 ### ■ rec-live
@@ -138,7 +128,7 @@ Now downloading..
 | LFR        |          3600 |
 +------------+---------------+
 Completed!
-/tmp/radigo/output/20161205083547-LFR.mp3
+/tmp/output/20161205083547-LFR.mp3
 ```
 
 ### ■ browse / browse-live
@@ -157,7 +147,7 @@ $ radigo browse-live -id=LFR
 
 #### - working dir
 
-Default: `/tmp/radigo`
+Default: `${PWD}/output`
 
 If you want to change the working dir, set the environment variables.
 
