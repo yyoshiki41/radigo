@@ -17,6 +17,4 @@ WORKDIR /tmp
 RUN wget https://github.com/yyoshiki41/radigo/releases/download/${VERSION}/radigo_${VERSION}_linux_amd64.zip
 RUN unzip ./radigo_${VERSION}_linux_amd64.zip -d /usr/local/bin
 
-RUN mkdir -p /tmp/radigo/output
-
 CMD ["/bin/bash"]

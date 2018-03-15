@@ -10,7 +10,7 @@ import (
 
 const (
 	defaultOutputDir = "output"
-	envRadigoOutput  = "RADIGO_OUTPUT"
+	envRadigoHome    = "RADIGO_HOME"
 )
 
 // OutputConfig contains the configuration for output files.
@@ -21,9 +21,9 @@ type OutputConfig struct {
 }
 
 func NewOutputConfig(fileBaseName, fileFormat string) (*OutputConfig, error) {
-	// If the environment variable RADIGO_OUTPUT is set,
+	// If the environment variable RADIGO_HOME is set,
 	// override working directory path.
-	fullPath := os.Getenv(envRadigoOutput)
+	fullPath := os.Getenv(envRadigoHome)
 	switch {
 	case fullPath != "" && !filepath.IsAbs(fullPath):
 		wd, err := os.Getwd()
