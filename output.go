@@ -1,7 +1,6 @@
 package radigo
 
 import (
-	"context"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -80,31 +79,4 @@ func (c *OutputConfig) AudioFormat() string {
 func (c *OutputConfig) AbsPath() string {
 	name := fmt.Sprintf("%s.%s", c.FileBaseName, c.FileFormat)
 	return filepath.Join(c.DirFullPath, name)
-}
-
-func concatAACFiles(ctx context.Context, resourcesDir string) (string, error) {
-	files, err := ioutil.ReadDir(resourcesDir)
-	if err != nil {
-		return "", err
-	}
-
-	listFile, err := ioutil.TempFile(resourcesDir, "aac_resources")
-	if err != nil {
-		return "", err
-	}
-	defer os.Remove(listFile.Name())
-
-	for _, f := range files {
-		p := fmt.Sprintf("file '%s'\n", filepath.Join(resourcesDir, f.Name()))
-		if _, err := listFile.WriteString(p); err != nil {
-			return "", err
-		}
-	}
-
-	concatedFile := filepath.Join(resourcesDir, "concated.aac")
-	if err := ConcatAACFilesFromList(ctx, listFile.Name(), concatedFile); err != nil {
-		return "", err
-	}
-
-	return concatedFile, nil
 }

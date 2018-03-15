@@ -130,7 +130,7 @@ func (c *recCommand) Run(args []string) int {
 		return 1
 	}
 
-	concatedFile, err := concatAACFiles(ctx, aacDir)
+	concatedFile, err := ConcatAACFilesFromList(ctx, aacDir)
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to concat aac files: %s", err))

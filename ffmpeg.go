@@ -2,8 +2,12 @@ package radigo
 
 import (
 	"context"
+	"fmt"
 	"io"
+	"io/ioutil"
+	"os"
 	"os/exec"
+	"path/filepath"
 )
 
 type ffmpeg struct {
@@ -74,8 +78,36 @@ func ConvertAACtoMP3(ctx context.Context, input, output string) error {
 	return f.run(output)
 }
 
-// ConcatAACFilesFromList converts an aac file to a mp3 file.
-func ConcatAACFilesFromList(ctx context.Context, input, output string) error {
+// ConcatAACFilesFromList concatenates files from the list of resources.
+func ConcatAACFilesFromList(ctx context.Context, resourcesDir string) (string, error) {
+	files, err := ioutil.ReadDir(resourcesDir)
+	if err != nil {
+		return "", err
+	}
+
+	listFile, err := ioutil.TempFile(resourcesDir, "aac_resources")
+	if err != nil {
+		return "", err
+	}
+	defer os.Remove(listFile.Name())
+
+	for _, f := range files {
+		p := fmt.Sprintf("file '%s'\n", filepath.Join(resourcesDir, f.Name()))
+		if _, err := listFile.WriteString(p); err != nil {
+			return "", err
+		}
+	}
+
+	concatedFile := filepath.Join(resourcesDir, "concated.aac")
+	if err := ConcatAACFiles(ctx, listFile.Name(), concatedFile); err != nil {
+		return "", err
+	}
+
+	return concatedFile, nil
+}
+
+// ConcatAACFiles concatenate files of the same type.
+func ConcatAACFiles(ctx context.Context, input, output string) error {
 	f, err := newFfmpeg(ctx)
 	if err != nil {
 		return err
