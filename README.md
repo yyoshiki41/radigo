@@ -160,6 +160,13 @@ If use the [area free](http://radiko.jp/rg/premium/), set the environment variab
 - `RADIKO_MAIL`
 - `RADIKO_PASSWORD`
 
+##### e.g.
+
+```bash
+# export RADIKO_MAIL="radigo@example.com" && export RADIKO_PASSWORD="password"
+$ radigo rec -a=JP13 -id=LFR -s=20161126010000
+```
+
 ## Known Issues
 
 ### `ERROR: Failed to concat aac files`
