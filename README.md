@@ -99,6 +99,12 @@ Area ID: JP13
 +-----------------------+---------------+
 ```
 
+#### Note
+
+`Area ID` is ISO 3166-2 code that is defined for 47 prefectures.
+
+_c.f._ _[ISO 3166-2:JP - Wikipedia](https://ja.wikipedia.org/wiki/ISO_3166-2:JP)_
+
 ### ■ rec
 
 Record the program using the [timefree](http://radiko.jp/#!/fun/timeshift).
