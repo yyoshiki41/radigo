@@ -64,6 +64,11 @@ func (c *recCommand) Run(args []string) int {
 			"Failed to setup the output dir: %s", err))
 		return 1
 	}
+	if output.IsExist() {
+		c.ui.Error(fmt.Sprintf(
+			"the output file already exists: %s", output.AbsPath()))
+		return 1
+	}
 
 	c.ui.Output("Now downloading.. ")
 	spin := spinner.New(spinner.CharSets[9], time.Second)

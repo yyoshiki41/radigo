@@ -80,3 +80,8 @@ func (c *OutputConfig) AbsPath() string {
 	name := fmt.Sprintf("%s.%s", c.FileBaseName, c.FileFormat)
 	return filepath.Join(c.DirFullPath, name)
 }
+
+func (c *OutputConfig) IsExist() bool {
+	_, err := os.Stat(c.AbsPath())
+	return err == nil
+}
