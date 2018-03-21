@@ -1,11 +1,11 @@
-FROM yyoshiki41/ubuntu-ffmpeg-v3.3
+FROM ubuntu:16.04
 
 LABEL maintainer="yyoshiki41@gmail.com"
 
 ARG VERSION="v0.6.0"
 
 RUN apt update
-RUN apt install -y tzdata unzip rtmpdump
+RUN apt install -y wget tzdata unzip pkg-config libmp3lame0 ffmpeg rtmpdump
 
 # set timezone
 ENV TZ "Asia/Tokyo"
