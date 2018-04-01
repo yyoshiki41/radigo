@@ -1,4 +1,4 @@
-.PHONY: all help installdeps build build-4-docker vet test test-cover
+.PHONY: all help installdeps build build-4-docker vet test test-cover docker-build
 
 RADIGOPKG=$(shell go list ./... | grep -v "/vendor/")
 
@@ -12,7 +12,7 @@ installdeps:
 	glide i
 
 build: installdeps
-	go build cmd/radigo/...
+	go build ./cmd/radigo/...
 
 build-4-docker: installdeps
 	CGO_ENABLED=0 GOOS=linux go build -o /bin/radigo cmd/radigo/main.go
@@ -29,3 +29,6 @@ test-cover:
 		go test -coverprofile=profile.out -covermode=atomic $$d || exit 1; \
 		[ -f profile.out ] && cat profile.out >> coverage.txt && rm profile.out || true; \
 	done
+
+docker-build:
+	docker build -t yyoshiki41/radigo .

@@ -28,11 +28,14 @@ FROM alpine:latest
 
 # Set timezone
 ENV TZ "Asia/Tokyo"
+# Set default output dir
+VOLUME ["/output"]
 
 RUN apk add --no-cache ca-certificates ffmpeg rtmpdump tzdata
 
 COPY --from=build /usr/bin/ffmpeg /usr/bin/ffmpeg
 COPY --from=build /usr/bin/rtmpdump /usr/bin/rtmpdump
 COPY --from=build /bin/radigo /bin/radigo
+
 ENTRYPOINT ["/bin/radigo"]
 CMD ["--help"]
