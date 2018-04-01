@@ -20,12 +20,15 @@ jobs:
             - glide-{{ .Branch }}-{{ checksum "glide.lock" }}
       - run:
           name: Vendoring
-          command: glide i
+          command: make installdeps
       - save_cache:
           key: glide-{{ .Branch }}-{{ checksum "glide.lock" }}
           paths:
             - "vendor"
 
+      - run:
+          name: Run go vet
+          command: make vet
       - run:
           name: Run unit tests
           command: make test-cover

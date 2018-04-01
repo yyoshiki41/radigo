@@ -1,20 +1,41 @@
-FROM yyoshiki41/ubuntu-ffmpeg-v3.3
+FROM golang:1.10-alpine AS build
 
 LABEL maintainer="yyoshiki41@gmail.com"
 
-ARG VERSION="v0.6.0"
+ARG PROJECT_PATH=/go/src/github.com/yyoshiki41/radigo
 
-RUN apt update
-RUN apt install -y tzdata unzip rtmpdump
-
-# set timezone
+# Set timezone
 ENV TZ "Asia/Tokyo"
-RUN echo $TZ > /etc/timezone
-RUN dpkg-reconfigure --frontend noninteractive tzdata
 
-# download radigo
-WORKDIR /tmp
-RUN wget https://github.com/yyoshiki41/radigo/releases/download/${VERSION}/radigo_${VERSION}_linux_amd64.zip
-RUN unzip ./radigo_${VERSION}_linux_amd64.zip -d /usr/local/bin
+# Install tools required to build the project
+RUN apk add --no-cache ca-certificates \
+  curl \
+  ffmpeg \
+  git \
+  make \
+  rtmpdump \
+  tzdata
 
-CMD ["/bin/bash"]
+WORKDIR ${PROJECT_PATH}
+COPY . ${PROJECT_PATH}/
+
+RUN curl https://glide.sh/get | sh
+RUN make build-4-docker
+
+
+# This results in a single layer image
+FROM alpine:latest
+
+# Set timezone
+ENV TZ "Asia/Tokyo"
+# Set default output dir
+VOLUME ["/output"]
+
+RUN apk add --no-cache ca-certificates ffmpeg rtmpdump tzdata
+
+COPY --from=build /usr/bin/ffmpeg /usr/bin/ffmpeg
+COPY --from=build /usr/bin/rtmpdump /usr/bin/rtmpdump
+COPY --from=build /bin/radigo /bin/radigo
+
+ENTRYPOINT ["/bin/radigo"]
+CMD ["--help"]

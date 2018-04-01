@@ -24,25 +24,25 @@ $ docker pull yyoshiki41/radigo
 You can launch a radigo container and exec `radigo` command.
 
 ```bash
-$ docker run --name radigo -itd yyoshiki41/radigo
-$ docker attach radigo
-root@158057ab4c2a:/tmp$ radigo rec -id=LFR -s=20180114010000
+# Mount the volume `"$PWD"/output`(default output path) into `/output` in the container
+$ docker run -it \
+    -v "$(pwd)"/output:/output \
+    yyoshiki41/radigo rec -id=LFR -s=20180401010000
 Now downloading..
 /
-+------------+----------------------------------+
-| STATION ID |              TITLE               |
-+------------+----------------------------------+
-| LFR        | オードリーのオールナイトニッポン |
-+------------+----------------------------------+
++------------+---------------------------------+
+| STATION ID |              TITLE              |
++------------+---------------------------------+
+| LFR        |　　  オードリーのオールナイトニッポン |
++------------+---------------------------------+
 | Completed!
-/tmp/output/20180114010000-LFR.aac
+/output/20180401010000-LFR.aac
 ```
 
-Copy the output from a radigo container to the host (your local machine).
+Open the output file created by the container on your local machine.
 
 ```bash
-$ docker cp radigo:/tmp/output/20180114010000-LFR.aac ./
-$ open ./20180114010000-LFR.aac
+$ open $PWD/output/20180401010000-LFR.aac
 ```
 
 ### Building from source
@@ -50,7 +50,8 @@ $ open ./20180114010000-LFR.aac
 ・Go 1.7 or newer
 
 ```bash
-$ go get github.com/yyoshiki41/radigo/cmd/radigo/...
+$ make build
+$ radigo help
 ```
 
 #### Requirements
