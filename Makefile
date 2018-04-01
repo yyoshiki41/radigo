@@ -1,6 +1,6 @@
 RADIGOPKG=$(shell go list ./... | grep -v "/vendor/")
 
-.PHONY: all help build test
+.PHONY: all help build installdeps vet test test-cover
 
 all: help
 
@@ -8,11 +8,20 @@ help:
 	@echo "make build         #=> Build binary"
 	@echo "make test          #=> Run unit tests"
 
-build:
-	go build ./cmd/radigo/...
+installdeps:
+	glide i
 
-test:
-	go test $(RADIGOPKG)
+build: installdeps
+	go build cmd/radigo/...
+
+build-4-docker:
+	CGO_ENABLED=0 GOOS=linux go build -o /bin/radigo cmd/radigo/main.go
+
+vet:
+	@go vet -v $(RADIGOPKG)
+
+test: vet
+	@go test $(RADIGOPKG)
 
 test-cover:
 	@echo "" > coverage.txt; \
