@@ -1,6 +1,6 @@
-RADIGOPKG=$(shell go list ./... | grep -v "/vendor/")
+.PHONY: all help installdeps build build-4-docker vet test test-cover
 
-.PHONY: all help build installdeps vet test test-cover
+RADIGOPKG=$(shell go list ./... | grep -v "/vendor/")
 
 all: help
 

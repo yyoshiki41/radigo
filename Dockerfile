@@ -10,11 +10,11 @@ ENV TZ "Asia/Tokyo"
 # Install tools required to build the project
 RUN apk add --no-cache ca-certificates \
   curl \
+  ffmpeg \
   git \
   make \
   rtmpdump \
-  tzdata \
-  ffmpeg
+  tzdata
 
 WORKDIR ${PROJECT_PATH}
 COPY . ${PROJECT_PATH}/
@@ -29,7 +29,7 @@ FROM alpine:latest
 # Set timezone
 ENV TZ "Asia/Tokyo"
 
-RUN apk add --no-cache ca-certificates tzdata ffmpeg rtmpdump
+RUN apk add --no-cache ca-certificates ffmpeg rtmpdump tzdata
 
 COPY --from=build /usr/bin/ffmpeg /usr/bin/ffmpeg
 COPY --from=build /usr/bin/rtmpdump /usr/bin/rtmpdump
