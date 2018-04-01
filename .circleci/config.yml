@@ -27,6 +27,9 @@ jobs:
             - "vendor"
 
       - run:
+          name: Run go vet
+          command: make vet
+      - run:
           name: Run unit tests
           command: make test-cover
 

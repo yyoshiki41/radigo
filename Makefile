@@ -14,7 +14,7 @@ installdeps:
 build: installdeps
 	go build cmd/radigo/...
 
-build-4-docker:
+build-4-docker: installdeps
 	CGO_ENABLED=0 GOOS=linux go build -o /bin/radigo cmd/radigo/main.go
 
 vet:
