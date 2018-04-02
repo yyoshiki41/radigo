@@ -45,7 +45,7 @@ Open the output file created by the container on your local machine.
 $ open $PWD/output/20180401010000-LFR.aac
 ```
 
-### Building from source
+### Build the binary from source
 
 ・Go 1.7 or newer
 
@@ -58,6 +58,13 @@ $ radigo help
 
 - ffmpeg
 - rtmpdump (only if [recording a live streaming radio](#-rec-live))
+
+### Build docker image from source
+
+```bash
+$ make docker-build
+$ docker run -it yyoshiki41/radigo help
+```
 
 ## Usage
 
