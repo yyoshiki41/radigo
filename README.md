@@ -54,6 +54,8 @@ $ make build
 $ radigo help
 ```
 
+Or release binaries are available on [the releases page](https://github.com/yyoshiki41/radigo/releases).
+
 #### Requirements
 
 - ffmpeg
