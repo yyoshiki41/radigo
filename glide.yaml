@@ -1,6 +1,0 @@
-package: github.com/yyoshiki41/radigo
-import:
-- package: github.com/mitchellh/cli
-  version: fa17b36f6c61f1ddbbb08c9f6fde94b3c065a09d
-- package: github.com/yyoshiki41/go-radiko
-  version: v0.6.0
