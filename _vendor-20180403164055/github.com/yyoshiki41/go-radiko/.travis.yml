@@ -1,0 +1,16 @@
+language: go
+
+go:
+  - 1.7.3
+  - master
+
+sudo: false
+
+install:
+  - make get-deps
+
+script:
+  - make test-ci
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><radiko>
+  <ttl>300</ttl>
+  <srvtime>1478960627</srvtime>
+  <stations>
+    <station id="TBS">
+      <name>TBSラジオ</name>
+      <scd>
+        <progs>
+          <date>20161112</date>
+          <prog ft="20161112220000" to="20161113000000" ftl="2200" tol="2400" dur="7200">
+            <title>ライムスター宇多丸のウィークエンド・シャッフル</title>
+            <sub_title />  <imgs>
+              <img src="33" type="" />
+            </imgs>
+            <pfm>宇多丸　　ゲスト：サイプレス上野/MOBY(スクービードゥーのドラマー)</pfm>
+            <desc />  <info>&lt;img src=&apos;http://static.tbsradio.jp/wp-content/uploads/2016/02/mainimg_utamaru_312x176.jpg&apos; style=&quot;max-width: 200px;&quot;&gt;&lt;br /&gt;&lt;br /&gt;10時20分頃からは、「週刊映画時評ムービーウォッチメン」。&lt;br/&gt;今回評論する映画は、菅田将暉・小松菜奈主演、新鋭、山戸結希監督作品『溺れるナイフ』。&lt;br/&gt;11時からのJ-POPMIXコーナー、「ディスコ954」には、サイプレス上野さんが登場！&lt;br/&gt;11時20分頃からは特集コーナー「サタデーナイトラボ」。&lt;br/&gt;ロックバンド、スクービードゥーのドラマーにして、クイズ作家の経験もあるクイズマニア、MOBYが自作のクイズを、ひらすら出し続ける特集！&lt;br/&gt;人気投稿コーナー「ババァ、ノックしろよ」も！&lt;br/&gt;&lt;br/&gt;twitterハッシュタグは「&lt;a href=&quot;http://twitter.com/#!/search/%23utamaru&quot;&gt;#utamaru&lt;/a&gt;」&lt;br/&gt;メール：&lt;a href=&quot;mailto:utamaru@tbs.co.jp&quot;&gt;utamaru@tbs.co.jp&lt;/a&gt;&lt;br/&gt;ラジオクラウド：&lt;a href=&quot;https://radiocloud.jp/archive/utamaru&quot;&gt;https://radiocloud.jp/archive/utamaru&lt;/a&gt;&lt;br/&gt;</info>
+            <metas>
+              <meta name="twitter" value="#utamaru" />
+              <meta name="twitter-hash" value="#utamaru" />
+              <meta name="facebook-fanpage" value="http://www.facebook.com/radiko.jp" />
+            </metas>
+            <url>http://www.tbsradio.jp/utamaru/</url>
+          </prog>
+        </progs>
+      </scd>
+    </station>
+    <station id="LFR">
+      <name>ニッポン放送</name>
+      <scd>
+        <progs>
+          <date>20161112</date>
+          <prog ft="20161112230000" to="20161112233000" ftl="2300" tol="2330" dur="1800">
+            <title>中居正広のSome girl’ SMAP</title>
+            <sub_title />  <imgs>
+              <img src="52" type="" />
+            </imgs>
+            <pfm>中居正広（ＳＭＡＰ）</pfm>
+            <desc>パーソナリティ：中居正広&lt;br&gt;番組へのメッセージは、おハガキで、〒100-8439 ニッポン放送「中居正広のSome girl’ SMAP」係へお送り下さい。</desc>
+            <info>twitterハッシュタグは「&lt;a href=&quot;http://twitter.com/#!/search/%23jolf&quot;&gt;#jolf&lt;/a&gt;」&lt;br&gt;twitterアカウントは「&lt;a href=&quot;http://twitter.com/#!/1242_PR&quot;&gt;@1242_PR&lt;/a&gt;」&lt;br&gt;facebookページは「&lt;a href=&apos;http://www.facebook.com/#!/am1242&apos;&gt;http://www.facebook.com/#!/am1242&lt;/a&gt;」</info>
+            <metas>
+              <meta name="facebook-fanpage" value="http://www.facebook.com/#!/am1242" />
+              <meta name="twitter" value="#jolf" />
+              <meta name="twitter" value="from:1242_PR" />
+              <meta name="twitter-hash" value="#jolf" />
+            </metas>
+            <url></url>
+          </prog>
+          <prog ft="20161112233000" to="20161113010000" ftl="2330" tol="2500" dur="5400">
+            <title>オールナイトニッポンサタデースペシャル 大倉くんと高橋くん</title>
+            <sub_title />  <imgs>
+              <img src="53" type="" />
+            </imgs>
+            <pfm>大倉忠義＆高橋優</pfm>
+            <desc>関ジャニ∞の大倉忠義と、高橋優の２人が毎週生放送でしゃべります！土曜の夜２３時３０分、ラジオで一緒に過ごしませんか？土曜日のこの時間は、１週間で一番リラックスしている時間。そんな時間を同世代の男２人があなたと語り合います！スタジオの２人そして全国の仲間たちと‘電波’でつながりましょう！あなたからは「今週のやっちゃった話」と題して募集！生電話であなたの話を伺います！「イライラじゃんけん」「ノビル言葉」というコーナーもありますよ！番組では紹介しませんが、番組ハッシュタグは、　#大倉くんと高橋くん　です！</desc>
+            <info>メールアドレス：&lt;br&gt;&lt;a href=&quot;mailto:ot@allnightnippon.com&quot;&gt;ot@allnightnippon.com&lt;/a&gt;&lt;br&gt;&lt;br&gt;番組ホームページは&lt;a href=&quot;http://www.allnightnippon.com/okura_takahashi/&quot;&gt;こちら&lt;/a&gt;&lt;br&gt;&lt;br&gt;twitterハッシュタグは「&lt;a href=&quot;http://twitter.com/#!/search/%23%E5%A4%A7%E5%80%89%E3%81%8F%E3%82%93%E3%81%A8%E9%AB%98%E6%A9%8B%E3%81%8F%E3%82%93&quot;&gt;#大倉くんと高橋くん&lt;/a&gt;」twitterアカウントは「&lt;a href=&quot;http://twitter.com/#!/1242_PR&quot;&gt;@1242_PR&lt;/a&gt;」&lt;br&gt;facebookページは「&lt;a href=&apos;http://www.facebook.com/#!/am1242&apos;&gt;http://www.facebook.com/#!/am1242&lt;/a&gt;」</info>
+            <metas>
+              <meta name="facebook-fanpage" value="http://www.facebook.com/#!/am1242" />
+              <meta name="twitter" value="#大倉くんと高橋くん" />
+              <meta name="twitter" value="from:1242_PR" />
+              <meta name="twitter-hash" value="#大倉くんと高橋くん" />
+            </metas>
+            <url>http://www.allnightnippon.com/okura_takahashi/</url>
+          </prog>
+        </progs>
+      </scd>
+    </station>
+  </stations>
+</radiko>
