@@ -9,7 +9,7 @@ help:
 	@echo "make test          #=> Run unit tests"
 
 installdeps:
-	glide i
+	dep ensure
 
 build: installdeps
 	go build ./cmd/radigo/...
