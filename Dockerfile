@@ -2,8 +2,6 @@ FROM golang:1.10-alpine AS build
 
 LABEL maintainer="yyoshiki41@gmail.com"
 
-ARG PROJECT_PATH=/go/src/github.com/yyoshiki41/radigo
-
 # Set timezone
 ENV TZ "Asia/Tokyo"
 
@@ -16,10 +14,13 @@ RUN apk add --no-cache ca-certificates \
   rtmpdump \
   tzdata
 
+ARG PROJECT_PATH=/go/src/github.com/yyoshiki41/radigo
 WORKDIR ${PROJECT_PATH}
 COPY . ${PROJECT_PATH}/
 
-RUN curl https://glide.sh/get | sh
+# Install dep command
+RUN curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+# Build the project binary
 RUN make build-4-docker
 
 

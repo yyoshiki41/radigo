@@ -16,12 +16,12 @@ jobs:
       - run: curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
       - restore_cache:
           keys:
-            - glide-{{ .Branch }}-{{ checksum "Gopkg.lock" }}
+            - gopkg-{{ .Branch }}-{{ checksum "Gopkg.lock" }}
       - run:
           name: Vendoring
           command: make installdeps
       - save_cache:
-          key: glide-{{ .Branch }}-{{ checksum "Gopkg.lock" }}
+          key: gopkg-{{ .Branch }}-{{ checksum "Gopkg.lock" }}
           paths:
             - "vendor"
 
