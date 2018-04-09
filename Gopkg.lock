@@ -29,6 +29,18 @@
   version = "v0.8"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/hashicorp/errwrap"
+  packages = ["."]
+  revision = "7554cd9344cec97297fa6649b055a8c98c2a1e55"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/hashicorp/go-multierror"
+  packages = ["."]
+  revision = "b7773ae218740a7be65057fc60b366a49b538a44"
+
+[[projects]]
   name = "github.com/mattn/go-colorable"
   packages = ["."]
   revision = "d228849504861217f796da67fae4f6e347643f15"
@@ -48,12 +60,23 @@
 [[projects]]
   name = "github.com/mitchellh/cli"
   packages = ["."]
-  revision = "fa17b36f6c61f1ddbbb08c9f6fde94b3c065a09d"
+  revision = "c54c85e9bd492bdba226ffdda55d4e293b79f8e8"
 
 [[projects]]
   name = "github.com/olekukonko/tablewriter"
   packages = ["."]
   revision = "bdcc175572fd7abece6c831e643891b9331bc9e7"
+
+[[projects]]
+  name = "github.com/posener/complete"
+  packages = [
+    ".",
+    "cmd",
+    "cmd/install",
+    "match"
+  ]
+  revision = "98eb9847f27ba2008d380a32c98be474dea55bdf"
+  version = "v1.1.1"
 
 [[projects]]
   name = "github.com/yyoshiki41/go-radiko"
@@ -81,6 +104,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "dc2c48d4c1a025640a9d69598277e537bc7bddcc7e9431640163e2b4469c6075"
+  inputs-digest = "bb6006509446e926f4525200ae48153c4ceb95f067000128b3354a7447a392aa"
   solver-name = "gps-cdcl"
   solver-version = 1

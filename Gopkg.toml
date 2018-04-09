@@ -29,6 +29,10 @@
   name = "github.com/yyoshiki41/go-radiko"
   version = "0.6.0"
 
+[[constraint]]
+  name = "github.com/mitchellh/cli"
+  revision = "c54c85e9bd492bdba226ffdda55d4e293b79f8e8"
+
 [prune]
   go-tests = true
   unused-packages = true
