@@ -18,8 +18,8 @@ ARG PROJECT_PATH=/go/src/github.com/yyoshiki41/radigo
 WORKDIR ${PROJECT_PATH}
 COPY . ${PROJECT_PATH}/
 
-# Install dep command
-RUN make install-deps
+# Install deps
+RUN make installdeps
 # Build the project binary
 RUN make build-4-docker
 
