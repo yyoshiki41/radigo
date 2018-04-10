@@ -50,6 +50,7 @@ $ open $PWD/output/20180401010000-LFR.aac
 ・Go 1.7 or newer
 
 ```bash
+$ make installdeps
 $ make build
 $ radigo help
 ```

@@ -19,7 +19,7 @@ WORKDIR ${PROJECT_PATH}
 COPY . ${PROJECT_PATH}/
 
 # Install dep command
-RUN curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+RUN make install-deps
 # Build the project binary
 RUN make build-4-docker
 
