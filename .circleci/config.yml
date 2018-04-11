@@ -13,7 +13,6 @@ jobs:
           keys:
             - v1-pkg-cache
 
-      - run: curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
       - restore_cache:
           keys:
             - gopkg-{{ .Branch }}-{{ checksum "Gopkg.lock" }}
