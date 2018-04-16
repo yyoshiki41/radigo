@@ -1,15 +1,19 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
+	"runtime"
 
 	"github.com/mitchellh/cli"
 	"github.com/yyoshiki41/radigo"
 )
 
 func main() {
-	c := cli.NewCLI("radigo", radigo.Version())
+	v := fmt.Sprintf("%s built with %s",
+		radigo.Version(), runtime.Version())
+	c := cli.NewCLI("radigo", v)
 	c.Args = os.Args[1:]
 	c.Commands = map[string]cli.CommandFactory{
 		"area":        radigo.AreaCommandFactory,
