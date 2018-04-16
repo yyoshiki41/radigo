@@ -8,8 +8,13 @@ DEP := $(shell which dep)
 all: help
 
 help:
-	@echo "make build         #=> Build binary"
-	@echo "make test          #=> Run unit tests"
+	@echo "Useful targets:"
+	@echo "  make dep           => Install dep command"
+	@echo "  make installdeps   => Run dep ensure"
+	@echo "  make build         => Build a binary"
+	@echo "  make test          => Run unit tests"
+	@echo "  make vet           => Run go vet"
+	@echo "  make docker-build  => Build a docker image"
 
 dep:
 ifndef DEP
