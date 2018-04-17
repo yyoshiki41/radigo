@@ -23,7 +23,7 @@ func getClient(ctx context.Context, areaID string) (*radiko.Client, error) {
 	}
 
 	// When a currentAreaID is not equal to the given areaID,
-	// it is neccessary to use the area free as the premium member.
+	// it is necessary to use the area free as the premium member.
 	if areaID != "" && areaID != currentAreaID {
 		mail := os.Getenv(envRadikoMail)
 		password := os.Getenv(envRadikoPassword)
