@@ -129,7 +129,7 @@ Now downloading..
 | LFR        |　　  オードリーのオールナイトニッポン |
 +------------+---------------------------------+
 Completed!
-/tmp/output/20161126010000-LFR.mp3
+/tmp/output/20161126010000-LFR.aac
 ```
 
 ### ■ rec-live
@@ -145,7 +145,7 @@ Now downloading..
 | LFR        |          3600 |
 +------------+---------------+
 Completed!
-/tmp/output/20161205083547-LFR.mp3
+/tmp/output/20161205083547-LFR.aac
 ```
 
 ### ■ browse / browse-live
