@@ -23,7 +23,7 @@ type recLiveCommand struct {
 }
 
 func (c *recLiveCommand) Run(args []string) int {
-	var stationID, duration, areaID, outputFilename string
+	var stationID, duration, areaID, fileType string
 	var verbose bool
 
 	f := flag.NewFlagSet("rec-live", flag.ContinueOnError)
@@ -32,8 +32,8 @@ func (c *recLiveCommand) Run(args []string) int {
 	f.StringVar(&duration, "t", "", "duration")
 	f.StringVar(&areaID, "area", "", "area")
 	f.StringVar(&areaID, "a", "", "area")
-	f.StringVar(&outputFilename, "output", "", "output")
-	f.StringVar(&outputFilename, "o", "", "output")
+	f.StringVar(&fileType, "output", AudioFormatAAC, "output")
+	f.StringVar(&fileType, "o", AudioFormatAAC, "output")
 	f.BoolVar(&verbose, "verbose", false, "verbose")
 	f.BoolVar(&verbose, "v", false, "verbose")
 	f.Usage = func() { c.ui.Error(c.Help()) }
@@ -50,16 +50,9 @@ func (c *recLiveCommand) Run(args []string) int {
 		return 1
 	}
 
-	var baseName string
-	if outputFilename == "" {
-		baseName = fmt.Sprintf("%s-%s",
-			time.Now().In(location).Format(datetimeLayout), stationID)
-	} else {
-		baseName = strings.TrimSuffix(outputFilename,
-			fmt.Sprintf(".%s", AudioFormatMP3))
-	}
-
-	output, err := NewOutputConfig(baseName, AudioFormatMP3)
+	output, err := NewOutputConfig(
+		fmt.Sprintf("%s-%s", time.Now().In(location).Format(datetimeLayout), stationID),
+		fileType)
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to configure output: %s", err))
@@ -157,13 +150,20 @@ func (c *recLiveCommand) Run(args []string) int {
 		return 1
 	}
 	ffmpegCmd.setInput("-")
-	ffmpegCmd.setArgs(
-		"-vn",
-		"-acodec", "libmp3lame",
-		"-ar", "44100",
-		"-ab", "64k",
-		"-ac", "2",
-	)
+
+	ffmpegArgs := []string{"-vn", "-acodec"}
+	switch fileType {
+	case AudioFormatAAC:
+		ffmpegArgs = append(ffmpegArgs, "copy")
+	case AudioFormatMP3:
+		ffmpegArgs = append(ffmpegArgs,
+			[]string{"libmp3lame",
+				"-ar", "44100",
+				"-ab", "64k",
+				"-ac", "2"}...)
+	}
+	ffmpegCmd.setArgs(ffmpegArgs...)
+
 	// For debugging mode
 	ffmpegStderr, err := ffmpegCmd.stderrPipe()
 	if err != nil {
@@ -240,7 +240,7 @@ Options:
   -id=name                 Station id
   -time,t=3600             Time duration (sec)
   -area,a=name             Area id
-  -output,o=filename       Output filename (mp3)
+  -output,o=aac            Output file type (aac, mp3)
   -verbose,v               Verbose mode
 `)
 }

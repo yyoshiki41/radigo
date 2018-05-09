@@ -171,6 +171,6 @@ Options:
   -id=name                 Station id
   -start,s=201610101000    Start time
   -area,a=name             Area id
-  -output,o=mp3            Output file type (mp3, aac)
+  -output,o=aac            Output file type (aac, mp3)
 `)
 }
