@@ -30,7 +30,7 @@ func init() {
 	}
 }
 
-const version = "v0.7.1"
+const version = "v0.8.0"
 
 // Version returns the app version.
 func Version() string {
