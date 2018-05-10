@@ -88,26 +88,25 @@ Available commands are:
 ```bash
 $ radigo area
 Area ID: JP13
-+-----------------------+---------------+
-|         NAME          |  STATION ID   |
-+-----------------------+---------------+
-| TBSラジオ		| TBS		|
-| 文化放送		| QRR		|
-| ニッポン放送		| LFR		|
-| ラジオNIKKEI第1	| RN1		|
-| ラジオNIKKEI第2	| RN2		|
-| InterFM897		| INT		|
-| TOKYOFM		| FMT		|
-| J-WAVE		| FMJ		|
-| ラジオ日本		| JORF		|
-| bayfm78		| BAYFM78	|
-| NACK5			| NACK5		|
-| ＦＭヨコハマ		| YFM		|
-| 放送大学		| HOUSOU-DAIGAKU|
-| NHKラジオ第1（東京）	| JOAK		|
-| NHKラジオ第2		| JOAB		|
-| NHK-FM（東京）		| JOAK-FM	|
-+-----------------------+---------------+
++--------------------+----------------+
+|        NAME        |   STATION ID   |
++--------------------+----------------+
+| TBSラジオ           | TBS            |
+| ニッポン放送         | LFR            |
+| InterFM897         | INT            |
+| TOKYO FM           | FMT            |
+| J-WAVE             | FMJ            |
+| bayfm78            | BAYFM78        |
+| NACK5              | NACK5          |
+| ＦＭヨコハマ         | YFM            |
+| 文化放送            | QRR            |
+| ラジオNIKKEI第1     | RN1            |
+| ラジオNIKKEI第2     | RN2            |
+| NHKラジオ第2        | JOAB           |
+| NHK-FM（東京）      | JOAK-FM        |
+| NHKラジオ第１(東京)  | JOAK           |
+| 放送大学            | HOUSOU-DAIGAKU |
++--------------------+----------------+
 ```
 
 #### Note
