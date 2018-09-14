@@ -40,6 +40,7 @@ func newRtmpdump(ctx context.Context, streamURL, authToken, duration, swfPlayer 
 		"--conn", fmt.Sprintf("S:%s", authToken),
 		"--swfVfy", swfPlayer,
 		"--stop", duration,
+		"--timeout", "180",
 		"--flv", "-",
 	)}, nil
 }
