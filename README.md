@@ -10,7 +10,7 @@ Record the [radiko.jp](http://radiko.jp/) program.
 [![Docker Build Status](https://img.shields.io/docker/build/yyoshiki41/radigo.svg)](https://hub.docker.com/r/yyoshiki41/radigo/tags/)
 [![Docker Automated build](https://img.shields.io/docker/automated/yyoshiki41/radigo.svg)](https://hub.docker.com/r/yyoshiki41/radigo/builds/)
 
-_Please refrain from using beyond the range of personal listening._ </br>
+__Please do not use this project for commercial use. Only for your personal, non-commercial use.__</br>
 __個人での視聴の目的以外で利用しないでください.__
 
 ## Installation
@@ -202,7 +202,9 @@ $ ulimit -n 16384
 
 ## License 
 
-The MIT License
+radigo is licensed under the GPLv3 license for all open source applications.
+
+Please do not use this project for commercial use, it is not intended to be used for commercial use.
 
 ## Author
 
