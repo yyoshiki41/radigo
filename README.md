@@ -33,7 +33,7 @@ Now downloading..
 +------------+---------------------------------+
 | STATION ID |              TITLE              |
 +------------+---------------------------------+
-| LFR        |　　  オードリーのオールナイトニッポン |
+| LFR        |　　  オードリーのオールナイトニッポン   　|
 +------------+---------------------------------+
 | Completed!
 /output/20180401010000-LFR.aac
@@ -125,7 +125,7 @@ Now downloading..
 +------------+---------------------------------+
 | STATION ID |              TITLE              |
 +------------+---------------------------------+
-| LFR        |　　  オードリーのオールナイトニッポン |
+| LFR        |　　  オードリーのオールナイトニッポン   　|
 +------------+---------------------------------+
 Completed!
 /tmp/output/20161126010000-LFR.aac
@@ -200,7 +200,7 @@ $ ulimit -n 16384
 - [Japanese](http://qiita.com/yyoshiki41/items/f81442d7dc2d0ddcf15b)
 - [Listen on itunes](http://esola.co/posts/2017/aac-profile/)
 
-## License 
+## License
 
 radigo is licensed under the GPLv3 license for all open source applications.
 
