@@ -92,19 +92,19 @@ Area ID: JP13
 |        NAME        |   STATION ID   |
 +--------------------+----------------+
 | TBSラジオ           | TBS            |
-| ニッポン放送         | LFR            |
+| ニッポン放送          | LFR            |
 | InterFM897         | INT            |
 | TOKYO FM           | FMT            |
 | J-WAVE             | FMJ            |
 | bayfm78            | BAYFM78        |
 | NACK5              | NACK5          |
-| ＦＭヨコハマ         | YFM            |
+| ＦＭヨコハマ           | YFM            |
 | 文化放送            | QRR            |
-| ラジオNIKKEI第1     | RN1            |
-| ラジオNIKKEI第2     | RN2            |
-| NHKラジオ第2        | JOAB           |
-| NHK-FM（東京）      | JOAK-FM        |
-| NHKラジオ第１(東京)  | JOAK           |
+| ラジオNIKKEI第1      | RN1            |
+| ラジオNIKKEI第2      | RN2            |
+| NHKラジオ第2         | JOAB           |
+| NHK-FM（東京）        | JOAK-FM        |
+| NHKラジオ第１(東京)   | JOAK           |
 | 放送大学            | HOUSOU-DAIGAKU |
 +--------------------+----------------+
 ```
