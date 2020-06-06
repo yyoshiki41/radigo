@@ -10,8 +10,8 @@ Record the [radiko.jp](http://radiko.jp/) program.
 [![Docker Build Status](https://img.shields.io/docker/build/yyoshiki41/radigo.svg)](https://hub.docker.com/r/yyoshiki41/radigo/tags/)
 [![Docker Automated build](https://img.shields.io/docker/automated/yyoshiki41/radigo.svg)](https://hub.docker.com/r/yyoshiki41/radigo/builds/)
 
-__Please do not use this project for commercial use. Only for your personal, non-commercial use.__</br>
-__個人での視聴の目的以外で利用しないでください.__
+**Please do not use this project for commercial use. Only for your personal, non-commercial use.**</br>
+**個人での視聴の目的以外で利用しないでください.**
 
 ## Installation
 
@@ -47,7 +47,7 @@ $ open $PWD/output/20180401010000-LFR.aac
 
 ### Build the binary from source
 
-・Go 1.7 or newer
+・Go 1.11 or higher
 
 ```bash
 $ make installdeps
