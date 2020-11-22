@@ -2,27 +2,15 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/golang:1.10
+      - image: circleci/golang:1.15
 
     working_directory: /go/src/github.com/yyoshiki41/radigo
 
     steps:
       - checkout
-
-      - restore_cache:
-          keys:
-            - v1-pkg-cache
-
-      - restore_cache:
-          keys:
-            - gopkg-{{ .Branch }}-{{ checksum "Gopkg.lock" }}
       - run:
           name: Vendoring
           command: make installdeps
-      - save_cache:
-          key: gopkg-{{ .Branch }}-{{ checksum "Gopkg.lock" }}
-          paths:
-            - "vendor"
 
       - run:
           name: Run go vet
@@ -34,8 +22,3 @@ jobs:
       - run:
           name: Report test coverage
           command: bash <(curl -s https://codecov.io/bash)
-
-      - save_cache:
-          key: v1-pkg-cache
-          paths:
-            - "/go/pkg"
