@@ -152,5 +152,10 @@ func ConcatAACFiles(ctx context.Context, input []string, resourcesDir string, ou
 	f.setInput(listFile.Name())
 	f.setArgs("-c", "copy")
 	// TODO: Collect log
-	return f.run(output)
+	err = f.run(output)
+	// Remove the intermediate files right after they are concatenated into one file
+	for _, f := range input {
+		defer os.Remove(f)
+	}
+	return err
 }
