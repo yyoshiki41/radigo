@@ -1,29 +1,21 @@
-.PHONY: all help dep installdeps build build-4-docker vet test test-cover docker-build
+.PHONY: all help installdeps build build-4-docker vet test test-cover docker-build
 
 RADIGOPKG=$(shell go list ./...)
 
 REVISION := $(shell git rev-parse --short HEAD)
-DEP := $(shell which dep)
 
 all: help
 
 help:
 	@echo "Useful targets:"
-	@echo "  make dep           => Install dep command"
-	@echo "  make installdeps   => Run dep ensure"
+	@echo "  make installdeps   => Install dependencies"
 	@echo "  make build         => Build a binary"
 	@echo "  make test          => Run unit tests"
 	@echo "  make vet           => Run go vet"
 	@echo "  make docker-build  => Build a docker image"
 
-dep:
-ifndef DEP
-	@echo "Install dep command"
-	@curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-endif
-
-installdeps: dep
-	dep ensure
+installdeps:
+	go mod download
 
 build:
 	go build ./cmd/radigo/...
