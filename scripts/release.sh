@@ -17,8 +17,15 @@ DIST="dist"
 mkdir -p "${ARCHIVES}/${DIST}"
 
 # cross compile
+XC_OS=${XC_OS:-linux windows}
 XC_ARCH=${XC_ARCH:-386 amd64}
-XC_OS=${XC_OS:-darwin linux windows}
+gox -output="${ARCHIVES}/{{.OS}}_{{.Arch}}/{{.Dir}}" \
+    -os="${XC_OS}" \
+    -arch="${XC_ARCH}" \
+    ./cmd/radigo
+# for darwin
+XC_OS=${XC_OS:-darwin}
+XC_ARCH=${XC_ARCH:-amd64 arm64}
 gox -output="${ARCHIVES}/{{.OS}}_{{.Arch}}/{{.Dir}}" \
     -os="${XC_OS}" \
     -arch="${XC_ARCH}" \
