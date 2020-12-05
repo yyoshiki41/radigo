@@ -16,7 +16,7 @@ require (
 	github.com/mitchellh/cli v0.0.0-20180406011036-c54c85e9bd49
 	github.com/olekukonko/tablewriter v0.0.0-20160923125401-bdcc175572fd
 	github.com/posener/complete v1.1.1 // indirect
-	github.com/yyoshiki41/go-radiko v0.6.0
+	github.com/yyoshiki41/go-radiko v0.7.0
 	golang.org/x/net v0.0.0-20170517171515-513929065c19 // indirect
 	golang.org/x/sys v0.0.0-20170721163517-c4489faa6e5a // indirect
 )
