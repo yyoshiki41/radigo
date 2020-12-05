@@ -24,8 +24,8 @@ github.com/olekukonko/tablewriter v0.0.0-20160923125401-bdcc175572fd h1:nEatQ6Jn
 github.com/olekukonko/tablewriter v0.0.0-20160923125401-bdcc175572fd/go.mod h1:vsDQFd/mU46D+Z4whnwzcISnGGzXWMclvtLoiIKAKIo=
 github.com/posener/complete v1.1.1 h1:ccV59UEOTzVDnDUEFdT95ZzHVZ+5+158q8+SJb2QV5w=
 github.com/posener/complete v1.1.1/go.mod h1:em0nMJCgc9GFtwrmVmEMR/ZL6WyhyjMBndrE9hABlRI=
-github.com/yyoshiki41/go-radiko v0.6.0 h1:7CXK15v4EHfxw950l0jf9WcoRXqivc7u+K2kP5IR0qE=
-github.com/yyoshiki41/go-radiko v0.6.0/go.mod h1:ci7oAybvu56U4p+mLqNPbS4/aoYMUbevs6iZZbKSua8=
+github.com/yyoshiki41/go-radiko v0.7.0 h1:U/QwWqETcMRTDHSchSjwrbCjH6vP2S73+6KdMafbfBY=
+github.com/yyoshiki41/go-radiko v0.7.0/go.mod h1:ci7oAybvu56U4p+mLqNPbS4/aoYMUbevs6iZZbKSua8=
 golang.org/x/net v0.0.0-20170517171515-513929065c19 h1:TOPcoCWURyGUQXxMClANLf83JAG3WdhCk3QuvG8LZ3E=
 golang.org/x/net v0.0.0-20170517171515-513929065c19/go.mod h1:mL1N/T3taQHkDXs73rZJwtUhF3w3ftmwwsq0BUmARs4=
 golang.org/x/sys v0.0.0-20170721163517-c4489faa6e5a h1:8KvbXgrIMDssOA6vHwmODQ7KZgoDdlu3fhUPtHXbEEY=
