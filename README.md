@@ -60,7 +60,6 @@ Or release binaries are available on [the releases page](https://github.com/yyos
 #### Requirements
 
 - ffmpeg
-- rtmpdump (only if [recording a live streaming radio](#-rec-live))
 
 ### Build docker image from source
 

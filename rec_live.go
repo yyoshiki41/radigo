@@ -4,10 +4,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"io"
-	"io/ioutil"
 	"os"
-	"path/filepath"
 	"strings"
 	"time"
 
@@ -15,7 +12,6 @@ import (
 	"github.com/mitchellh/cli"
 	"github.com/olekukonko/tablewriter"
 	"github.com/yyoshiki41/go-radiko"
-	"github.com/yyoshiki41/radigo/internal"
 )
 
 type recLiveCommand struct {
@@ -96,7 +92,7 @@ func (c *recLiveCommand) Run(args []string) int {
 		return 1
 	}
 
-	items, err := radiko.GetStreamMultiURL(stationID)
+	items, err := radiko.GetStreamSmhMultiURL(stationID)
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to get a stream url: %s", err))
@@ -108,39 +104,16 @@ func (c *recLiveCommand) Run(args []string) int {
 		// Premium user
 		if areaID != "" && areaID != currentAreaID {
 			if i.Areafree {
-				streamURL = i.Item
+				streamURL = i.PlaylistCreateURL
 				break
 			}
 			continue
 		}
 		// Normal user
 		if !i.Areafree {
-			streamURL = i.Item
+			streamURL = i.PlaylistCreateURL
 			break
 		}
-	}
-
-	tempDir, removeTempDir := internal.CreateTempDir()
-	defer removeTempDir()
-
-	swfPlayer := filepath.Join(tempDir, "myplayer.swf")
-	if err := radiko.DownloadPlayer(swfPlayer); err != nil {
-		c.ui.Error(fmt.Sprintf(
-			"Failed to download swf player. %s", err))
-		return 1
-	}
-
-	rtmpdumpCmd, err := newRtmpdump(ctx, streamURL, client.AuthToken(), duration, swfPlayer)
-	if err != nil {
-		c.ui.Error(fmt.Sprintf(
-			"Failed to construct rtmpdump command: %s", err))
-		return 1
-	}
-
-	rtmpdumpStdout, err := rtmpdumpCmd.StdoutPipe()
-	if err != nil {
-		c.ui.Error(fmt.Sprintf("%v", err))
-		return 1
 	}
 
 	ffmpegCmd, err := newFfmpeg(ctx)
@@ -149,9 +122,15 @@ func (c *recLiveCommand) Run(args []string) int {
 			"Failed to construct ffmpeg command: %s", err))
 		return 1
 	}
-	ffmpegCmd.setInput("-")
 
-	ffmpegArgs := []string{"-vn", "-acodec"}
+	ffmpegArgs := []string{
+		"-loglevel", "quiet",
+		"-fflags", "+discardcorrupt",
+		"-headers", "X-Radiko-Authtoken: " + client.AuthToken(),
+		"-i", streamURL,
+		"-vn",
+		"-acodec",
+	}
 	switch fileType {
 	case AudioFormatAAC:
 		ffmpegArgs = append(ffmpegArgs, "copy")
@@ -162,61 +141,10 @@ func (c *recLiveCommand) Run(args []string) int {
 				"-ab", "64k",
 				"-ac", "2"}...)
 	}
+	ffmpegArgs = append(ffmpegArgs, output.AbsPath())
 	ffmpegCmd.setArgs(ffmpegArgs...)
 
-	// For debugging mode
-	ffmpegStderr, err := ffmpegCmd.stderrPipe()
-	if err != nil {
-		c.ui.Warn(fmt.Sprintf("%v", err))
-	}
-
-	// need to close
-	ffmpegStdin, err := ffmpegCmd.stdinPipe()
-	if err != nil {
-		c.ui.Error(fmt.Sprintf("%v", err))
-		return 1
-	}
-
-	err = ffmpegCmd.start(output.AbsPath())
-	if err != nil {
-		ffmpegStdin.Close()
-
-		c.ui.Error(fmt.Sprintf(
-			"Failed to start ffmpeg command: %s", err))
-		return 1
-	}
-
-	go func() {
-		// Block until catch EOF in rtmpdumpStdout
-		_, err := io.Copy(ffmpegStdin, rtmpdumpStdout)
-		if err != nil {
-			ctxCancel()
-			c.ui.Error(fmt.Sprintf("%v", err))
-		}
-	}()
-
-	go func() {
-		defer ffmpegStdin.Close()
-
-		err := rtmpdumpCmd.Run()
-		if err != nil {
-			ctxCancel()
-			c.ui.Error(fmt.Sprintf(
-				"Failed to execute rtmpdump command: %s", err))
-		}
-	}()
-
-	if verbose {
-		b, err := ioutil.ReadAll(ffmpegStderr)
-		if err != nil {
-			c.ui.Warn(fmt.Sprintf(
-				"Failed to read ffmpeg Stderr: %s", err))
-		} else {
-			c.ui.Info(fmt.Sprintf("ffmpeg Stderr: %s", b))
-		}
-	}
-
-	err = ffmpegCmd.wait()
+	err = ffmpegCmd.Run()
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to execute ffmpeg command: %s", err))
