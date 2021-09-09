@@ -49,6 +49,5 @@ Usage: radigo browse-live [options]
   Browse radiko.jp live
 Options:
   -id=name                 Station id
-  -time,t=3600             Time duration (sec)
 `)
 }
