@@ -127,6 +127,7 @@ func (c *recLiveCommand) Run(args []string) int {
 		"-loglevel", "quiet",
 		"-fflags", "+discardcorrupt",
 		"-headers", "X-Radiko-Authtoken: " + client.AuthToken(),
+		"-t", duration,
 		"-i", streamURL,
 		"-vn",
 		"-acodec",
