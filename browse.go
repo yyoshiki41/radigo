@@ -3,7 +3,6 @@ package radigo
 import (
 	"flag"
 	"fmt"
-	"os/exec"
 	"strings"
 	"time"
 
@@ -39,8 +38,7 @@ func (c *browseCommand) Run(args []string) int {
 	}
 
 	url := radiko.GetTimeshiftURL(stationID, startTime)
-	cmd := exec.Command("open", url)
-	if err := cmd.Run(); err != nil {
+	if err := openBrowser(url); err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to open browser: %s", err))
 	}

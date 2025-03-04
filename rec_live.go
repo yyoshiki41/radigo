@@ -126,7 +126,8 @@ func (c *recLiveCommand) Run(args []string) int {
 	ffmpegArgs := []string{
 		"-loglevel", "quiet",
 		"-fflags", "+discardcorrupt",
-		"-headers", "X-Radiko-Authtoken: " + client.AuthToken(),
+		"-http_seekable", "0",
+		"-headers", "X-Radiko-AuthToken: " + client.AuthToken(),
 		"-t", duration,
 		"-i", streamURL,
 		"-vn",

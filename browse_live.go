@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os/exec"
+	"runtime"
 	"strings"
 
 	"github.com/mitchellh/cli"
@@ -12,6 +13,22 @@ import (
 
 type browseLiveCommand struct {
 	ui cli.Ui
+}
+
+func openBrowser(url string) error {
+	var err error
+
+	switch runtime.GOOS {
+	case "linux":
+		err = exec.Command("xdg-open", url).Start()
+	case "windows":
+		err = exec.Command("rundll32", "url.dll,FileProtocolHandler", url).Start()
+	case "darwin":
+		err = exec.Command("open", url).Start()
+	default:
+		err = fmt.Errorf("unsupported platform: %s", runtime.GOOS)
+	}
+	return err
 }
 
 func (c *browseLiveCommand) Run(args []string) int {
@@ -30,8 +47,7 @@ func (c *browseLiveCommand) Run(args []string) int {
 	}
 
 	url := radiko.GetLiveURL(stationID)
-	cmd := exec.Command("open", url)
-	if err := cmd.Run(); err != nil {
+	if err := openBrowser(url); err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to open browser: %s", err))
 	}
