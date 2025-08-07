@@ -2,7 +2,7 @@
 
 Record the [radiko.jp](http://radiko.jp/) program.
 
-[![godoc](https://godoc.org/github.com/yyoshiki41/radigo?status.svg)](https://godoc.org/github.com/yyoshiki41/radigo)
+[![PkgGoDev](https://pkg.go.dev/badge/github.com/yyoshiki41/radigo)](https://pkg.go.dev/github.com/yyoshiki41/radigo)
 [![go report](https://goreportcard.com/badge/github.com/yyoshiki41/radigo)](https://goreportcard.com/report/github.com/yyoshiki41/radigo)
 [![CircleCI](https://circleci.com/gh/yyoshiki41/radigo.svg?style=svg)](https://circleci.com/gh/yyoshiki41/radigo)
 
@@ -47,7 +47,7 @@ $ open $PWD/output/20180401010000-LFR.aac
 
 ### Build the binary from source
 
-・Go 1.11 or higher
+・Go 1.19 or higher
 
 ```bash
 $ make installdeps
@@ -128,7 +128,7 @@ Now downloading..
 | LFR        |　　  オードリーのオールナイトニッポン　　　　　　　　　　　　　　|
 +------------+---------------------------------+
 Completed!
-/tmp/output/20161126010000-LFR.aac
+./output/20161126010000-LFR.aac
 ```
 
 ### ■ rec-live
@@ -144,7 +144,7 @@ Now downloading..
 | LFR        |          3600 |
 +------------+---------------+
 Completed!
-/tmp/output/20161205083547-LFR.aac
+./output/20161205083547-LFR.aac
 ```
 
 ### ■ browse / browse-live
