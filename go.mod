@@ -4,6 +4,7 @@ go 1.19
 
 require (
 	github.com/briandowns/spinner v1.19.0
+	github.com/grafov/m3u8 v0.11.1
 	github.com/mitchellh/cli v1.1.4
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/yyoshiki41/go-radiko v0.9.0
@@ -17,7 +18,6 @@ require (
 	github.com/bgentry/speakeasy v0.1.0 // indirect
 	github.com/fatih/color v1.7.0 // indirect
 	github.com/google/uuid v1.1.2 // indirect
-	github.com/grafov/m3u8 v0.11.1 // indirect
 	github.com/hashicorp/errwrap v1.0.0 // indirect
 	github.com/hashicorp/go-multierror v1.0.0 // indirect
 	github.com/huandu/xstrings v1.3.2 // indirect

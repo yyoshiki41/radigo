@@ -18,6 +18,10 @@ const (
 var sem = make(chan struct{}, maxConcurrents)
 
 func BulkDownload(list []string, output string) error {
+	return BulkDownloadWithHeader(list, output, nil)
+}
+
+func BulkDownloadWithHeader(list []string, output string, header http.Header) error {
 	var errFlag bool
 	var wg sync.WaitGroup
 
@@ -29,7 +33,7 @@ func BulkDownload(list []string, output string) error {
 			var err error
 			for i := 0; i < maxAttempts; i++ {
 				sem <- struct{}{}
-				err = download(link, output)
+				err = download(link, output, header)
 				<-sem
 				if err == nil {
 					break
@@ -49,8 +53,18 @@ func BulkDownload(list []string, output string) error {
 	return nil
 }
 
-func download(link, output string) error {
-	resp, err := http.Get(link)
+func download(link, output string, header http.Header) error {
+	req, err := http.NewRequest("GET", link, nil)
+	if err != nil {
+		return err
+	}
+	for k, vs := range header {
+		for _, v := range vs {
+			req.Header.Add(k, v)
+		}
+	}
+
+	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return err
 	}

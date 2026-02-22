@@ -4,6 +4,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"net/http"
 	"os"
 	"strings"
 	"time"
@@ -11,7 +12,6 @@ import (
 	"github.com/briandowns/spinner"
 	"github.com/mitchellh/cli"
 	"github.com/olekukonko/tablewriter"
-	"github.com/yyoshiki41/go-radiko"
 	"github.com/yyoshiki41/radigo/internal"
 )
 
@@ -92,29 +92,23 @@ func (c *recCommand) Run(args []string) int {
 		return 1
 	}
 
-	go func() {
-		pg, err := client.GetProgramByStartTime(ctx, stationID, startTime)
-		if err != nil {
-			ctxCancel()
-			c.ui.Error(fmt.Sprintf(
-				"Failed to get the program: %s", err))
-		}
-
-		table := tablewriter.NewWriter(os.Stdout)
-		table.SetHeader([]string{"STATION ID", "TITLE"})
-		table.Append([]string{stationID, pg.Title})
-		fmt.Print("\n")
-		table.Render()
-	}()
-
-	uri, err := client.TimeshiftPlaylistM3U8(ctx, stationID, startTime)
+	prog, err := client.GetProgramByStartTime(ctx, stationID, startTime)
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
-			"Failed to get playlist.m3u8: %s", err))
+			"Failed to get the program: %s", err))
 		return 1
 	}
 
-	chunklist, err := radiko.GetChunklistFromM3U8(uri)
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetHeader([]string{"STATION ID", "TITLE"})
+	table.Append([]string{stationID, prog.Title})
+	fmt.Print("\n")
+	table.Render()
+
+	authToken := client.AuthToken()
+	areafree := areaID != "" && areaID != currentAreaID
+
+	chunklist, err := getTimeshiftChunklist(stationID, prog.Ft, prog.To, authToken, areafree)
 	if err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to get chunklist: %s", err))
@@ -129,7 +123,9 @@ func (c *recCommand) Run(args []string) int {
 	}
 	defer os.RemoveAll(aacDir) // clean up
 
-	if err := internal.BulkDownload(chunklist, aacDir); err != nil {
+	aacHeader := make(http.Header)
+	aacHeader.Set("X-Radiko-AuthToken", authToken)
+	if err := internal.BulkDownloadWithHeader(chunklist, aacDir, aacHeader); err != nil {
 		c.ui.Error(fmt.Sprintf(
 			"Failed to download aac files: %s", err))
 		return 1
